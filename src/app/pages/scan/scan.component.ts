@@ -17,8 +17,7 @@ export class ScanComponent {
   startScan() {
     console.log('Escaneo iniciado...');
     this.router.navigate(['/modelo3d']);
-
-    // Aquí eventualmente puedes llamar a tu servicio de cámara o escaneo.
-    // Por ejemplo: this.cameraService.openCamera()
   }
+
+  
 }

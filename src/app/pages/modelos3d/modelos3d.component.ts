@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modelos3d',
@@ -11,7 +12,11 @@ import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.compo
 })
 export class Modelos3dComponent {
 
+  constructor(private router: Router){
+
+  }
+
   verUbicacion() {
-    window.open('https://www.google.com/maps/place/Estatua+de+Tundama,+Duitama,+Boyacá', '_blank');
+  this.router.navigate(['/map'])
   }
 }

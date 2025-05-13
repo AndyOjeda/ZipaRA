@@ -12,14 +12,23 @@
 
 <!-- Resultados -->
 <div class="results-container" *ngIf="places.length > 0">
-  <div class="place-card" *ngFor="let place of places" (click)="flyTo(place.coordinates)">
-    <img src="https://source.unsplash.com/100x100/?place,city" class="place-img" />
-    <div class="place-info">
-      <h4>{{ place.name }}</h4>
-      <p>{{ place.address }}</p>
+  <div class="place-card" *ngFor="let place of places">
+    <div class="place-card-body">
+      <img [src]="place.image" class="place-img" />
+
+      <div class="place-details">
+        <div class="place-top">
+          <h4>{{ place.name }}</h4>
+          <p>{{ place.address }}</p>
+        </div>
+        <div class="place-actions">
+          <button class="fav-btn" (click)="toggleFavorite(place)">❤️</button>
+          <button class="details-btn" (click)="goToDetail(place)">Ver más</button>
+        </div>
+      </div>
     </div>
-    <button>➡</button>
   </div>
 </div>
+
 
 <app-bottom-nav></app-bottom-nav>

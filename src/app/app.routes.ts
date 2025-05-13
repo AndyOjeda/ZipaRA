@@ -14,6 +14,6 @@ export const routes: Routes = [
   { path: 'scan', component: ScanComponent },
   { path: 'favorites', component: FavoritesComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'detail', component: DetailComponent },
+  { path: 'detail/:id', component: DetailComponent },
   { path: 'modelo3d', component: Modelos3dComponent },
 ];
