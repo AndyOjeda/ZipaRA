@@ -4,12 +4,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: calc(20px + env(safe-area-inset-top)) 20px 20px 20px;
   height: 100vh;
   background-color: #1e1e1e;
   color: #fff;
   text-align: center;
   font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
 }
 
 h2 {
@@ -25,7 +26,7 @@ p {
 
 .scanner-frame {
   width: 300px;
-  height: 550px;
+  height: 450px;
   border: 3px dashed #d7fc39;
   border-radius: 16px;
   display: flex;

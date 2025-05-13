@@ -10,8 +10,10 @@
 /* Hero / Carousel */
 .carousel {
   position: relative;
-  height: 270px;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
+  padding-top: env(safe-area-inset-top);
 }
 
 
@@ -29,7 +31,7 @@
 /* Botones flotantes */
 .btn-floating {
   position: absolute;
-  top: 16px;
+  top: calc(16px + env(safe-area-inset-top));
   width: 40px;
   height: 40px;
   background: white;
@@ -43,6 +45,7 @@
   font-size: 18px;
   cursor: pointer;
 }
+
 
 .back-btn {
   left: 16px;
