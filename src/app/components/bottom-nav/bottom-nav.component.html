@@ -1,0 +1,32 @@
+<div class="bottom-nav">
+  <div
+    class="nav-item"
+    [class.active]="activeLink === 'home'"
+    (click)="setActive('home')">
+    <a [routerLink]="['/']"><i class="pi pi-home"></i></a>
+  </div>
+  <div
+    class="nav-item"
+    [class.active]="activeLink === 'map'"
+    (click)="setActive('map')">
+    <a [routerLink]="['/map']"><i class="pi pi-search"></i></a>
+  </div>
+  <div
+    class="nav-item"
+    [class.active]="activeLink === 'camera'"
+    (click)="setActive('camera')">
+    <a [routerLink]="['/scan']"><i class="pi pi-camera"></i></a>
+  </div>
+  <div
+    class="nav-item"
+    [class.active]="activeLink === 'favorites'"
+    (click)="setActive('favorites')">
+    <a [routerLink]="['/favorites']"><i class="pi pi-heart"></i></a>
+  </div>
+  <div
+    class="nav-item"
+    [class.active]="activeLink === 'profile'"
+    (click)="setActive('profile')">
+    <a [routerLink]="['/profile']"><i class="pi pi-user"></i></a>
+  </div>
+</div>

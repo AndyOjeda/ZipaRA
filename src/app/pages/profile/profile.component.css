@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.profile-container {
+  background-color: #ffffff;
+  min-height: 100vh;
+  padding: 30px 20px;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Poppins' , sans-serif;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  background-color: #d7fc39;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px;
+  font-size: 48px;
+  color: #000;
+}
+
+.username {
+  font-size: 24px;
+  margin: 0;
+  color: #111;
+}
+
+.location {
+  color: #666;
+  font-size: 14px;
+}
+
+.profile-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f2f2f2;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #222;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn i {
+  font-size: 18px;
+}
+
+.action-btn:hover {
+  background-color: #e2e2e2;
+  transform: scale(1.02);
+}
+
+.logout {
+  background-color: #ffe5e5;
+  color: #b00020;
+}
+
+.logout:hover {
+  background-color: #ffcfcf;
+}

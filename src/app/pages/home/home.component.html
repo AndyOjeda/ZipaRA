@@ -1,0 +1,82 @@
+<div class="home-container">
+  <header class="home-header">
+    <div class="user-info">
+      <img src="assets/img/icon.jpg" alt="Profile" class="avatar" />
+      <div>
+        <p class="hello">Hey, Vale 👋</p>
+        <p class="location">📍 Zipaquirá</p>
+      </div>
+    </div>
+    <div class="notification">
+      <i class="fas fa-bell"></i>
+    </div>
+  </header>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Encuentra lugares interesantes..." />
+    <button class="search-btn">🔍</button>
+  </div>
+
+  <section class="book-now">
+    <h3>Categorias</h3>
+    <div class="icons-row">
+      <div class="icon-btn active"><i class="pi pi-home"></i><span>Hoteles</span></div>
+      <div class="icon-btn"><i class="pi pi-shop"></i><span>Restaurantes</span></div>
+      <div class="icon-btn"><i class="pi pi-th-large"></i><span>Actividades</span></div>
+      <div class="icon-btn"><i class="pi pi-car"></i><span>Transporte</span></div>
+    </div>
+  </section>
+
+  <section class="popular-trips">
+    <div class="section-header">
+      <h3>Hoteles Populares</h3>
+      <a href="#">See more</a>
+    </div>
+    <div class="trip-cards">
+      <div class="trip-card" (click)="goToDetail('Camino de Sal', 'assets/img/hotel.jpg', '$124/person')">
+        <img src="assets/img/hotel.jpg" alt="Camino de Sal" />
+        <div class="card-info">
+          <p class="place-name">Camino de Sal</p>
+          <p class="price">$124/person</p>
+        </div>
+      </div>
+
+      <div class="trip-card" (click)="goToDetail('Hormuz Island', 'assets/img/hotel.jpg', '$120/person')">
+        <img src="assets/img/hotel.jpg" alt="Hormuz Island" />
+        <div class="card-info">
+          <p class="place-name">Hormuz Island</p>
+          <p class="price">$120/person</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories">
+    <div class="section-header">
+      <h3>Filtros</h3>
+      <a href="#">See more</a>
+    </div>
+    <div class="category-buttons">
+      <button>🏖 Beach</button>
+      <button>🌳 Forest</button>
+      <button>🏕 Camping</button>
+      <button>🗿 History</button>
+    </div>
+  </section>
+
+  <section class="recommended">
+    <h3>Hoteles Recomendados</h3>
+    <div class="trip-cards">
+      <div class="trip-card small">
+        <img src="assets/img/hotel.jpg" alt="Red Beach" />
+        <p class="place-name">Red Beach</p>
+      </div>
+      <div class="trip-card small">
+        <img src="assets/img/hotel.jpg" alt="Salt Goddess" />
+        <p class="place-name">Salt Goddess</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-bottom-nav></app-bottom-nav>

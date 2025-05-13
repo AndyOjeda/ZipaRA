@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+.home-container {
+  padding: 20px;
+  padding-bottom: 90px; /* espacio para la bottom nav */
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hello {
+  font-weight: bold;
+  margin: 0;
+}
+
+.location {
+  font-size: 13px;
+  color: gray;
+  margin: 0;
+}
+
+.notification i {
+  font-size: 20px;
+  color: #555;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.search-bar input {
+  width: 19rem;
+  max-width: 100%;
+  padding: 12px 45px 12px 20px;
+  border-radius: 20px;
+  border: 1px solid #eee;
+  background-color: #f7f7f7;
+  font-size: 14px;
+}
+
+.search-btn {
+  position: absolute;
+  right: 6px;
+  top: 2px;
+  background-color: #d7fc39;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.book-now h3,
+.popular-trips h3,
+.categories h3,
+.recommended h3 {
+  margin-bottom: 10px;
+}
+
+.icons-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #555;
+  padding: 10px;
+}
+
+.icon-btn i {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.icon-btn.active {
+  background-color: #000;
+  color: #fff;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-header a {
+  font-size: 13px;
+  color: #888;
+  text-decoration: none;
+}
+
+.trip-cards {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+}
+
+.trip-card {
+  flex: 0 0 auto;
+  width: 180px;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.trip-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.card-info {
+  padding: 10px;
+}
+
+.place-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0;
+}
+
+.price {
+  font-size: 12px;
+  color: gray;
+  margin: 0;
+}
+
+.categories .category-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.category-buttons button {
+  padding: 6px 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+.category-buttons button:nth-child(odd) {
+  background-color: #d7fc39;
+}
+
+.recommended .trip-card.small {
+  width: 120px;
+}
+
+.recommended .trip-card.small img {
+  height: 80px;
+}
+
+.recommended .trip-card.small .place-name {
+  padding: 5px;
+  font-size: 13px;
+  text-align: center;
+}
