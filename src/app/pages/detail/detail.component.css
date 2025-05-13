@@ -1,43 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 .detail-container {
-  padding: 1rem;
-  background-color: white;
+  background: #fff;
+  overflow: hidden;
+  margin-bottom: 70px;
+  font-family: 'Poppins', sans-serif;
 }
 
-.detail-image {
+/* Hero / Carousel */
+.carousel {
+  position: relative;
+  height: 270px;
+  overflow: hidden;
+}
+
+
+.carousel img {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 12px;
+  display: none;
 }
 
-.detail-info {
-  margin-top: 1rem;
+.carousel img.active {
+  display: block;
 }
 
-.detail-price {
-  font-size: 1.2rem;
-  color: #555;
-}
-
-.detail-location {
-  color: #777;
-  margin-bottom: 0.5rem;
-}
-
-.detail-description {
-  margin: 1rem 0;
-  line-height: 1.5;
-}
-
-.amenities {
+/* Botones flotantes */
+.btn-floating {
+  position: absolute;
+  top: 16px;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.back-btn {
+  left: 16px;
+}
+
+.fav-btn {
+  right: 16px;
+}
+
+.carousel-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
   gap: 10px;
 }
 
-.amenities span {
-  background-color: #f0f0f0;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
+.carousel-controls button {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 20px;
 }
+
+/* Info box general */
+.info-box {
+  padding: 20px;
+}
+
+/* Nueva fila superior: nombre, ubicación, precio y rating */
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.hotel-title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.location {
+  font-size: 14px;
+  color: gray;
+}
+
+.right-info {
+  text-align: right;
+  min-width: 160px;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.price span {
+  font-weight: normal;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.rating {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.amenities, .description, .gallery {
+  margin-top: 20px;
+}
+
+.icons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.amenity-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.gallery-images {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.gallery-images img {
+  height: 80px;
+  width: 100px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.mapbox-map {
+  width: 100%;
+  height: 250px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+

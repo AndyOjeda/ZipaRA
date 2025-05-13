@@ -6,6 +6,7 @@ import { FavoritesComponent } from './pages/favorites/favorites.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { DetailComponent } from './pages/detail/detail.component';
 import { ScanComponent } from './pages/scan/scan.component';
+import { Modelos3dComponent } from './pages/modelos3d/modelos3d.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,4 +15,5 @@ export const routes: Routes = [
   { path: 'favorites', component: FavoritesComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'detail', component: DetailComponent },
+  { path: 'modelo3d', component: Modelos3dComponent },
 ];

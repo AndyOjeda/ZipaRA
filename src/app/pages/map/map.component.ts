@@ -16,36 +16,57 @@ export class MapComponent implements OnInit {
   map!: mapboxgl.Map;
   searchQuery: string = '';
   places: any[] = [];
+  markers: mapboxgl.Marker[] = [];
 
-  constructor(private http: HttpClient) {}
-
-ngOnInit(): void {
-  this.map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [-74.03, 5.02], // Zipaquirá
-    zoom: 13,
-    accessToken: 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A'
-  });
-}
-
-
-  searchPlaces() {
-    const token = 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A';
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchQuery}.json?proximity=-74.03,5.02&limit=10&access_token=${token}`;
-
-    this.http.get<any>(url).subscribe((res) => {
-      this.places = res.features.map((f: any) => ({
-        name: f.text,
-        address: f.place_name,
-        coordinates: f.geometry.coordinates
-      }));
-
-      this.places.forEach(place => {
-        new mapboxgl.Marker()
-          .setLngLat(place.coordinates)
-          .addTo(this.map);
-      });
+  ngOnInit(): void {
+    this.map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-74.00, 5.02], // Zipaquirá
+      zoom: 13.5,
+      accessToken: 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A'
     });
+  }
+
+
+  flyTo(coords: [number, number]) {
+    this.map.flyTo({ center: coords, zoom: 15 });
+  }
+
+  searchPlace() {
+    const query = this.searchQuery.trim();
+    if (!query) return;
+
+    const accessToken = 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A';
+    const bbox = '-74.06,5.00,-74.00,5.05'; // Área de Zipaquirá
+
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?bbox=${bbox}&access_token=${accessToken}`)
+      .then(res => res.json())
+      .then(data => {
+        this.places = data.features.map((f: any) => ({
+          name: f.text,
+          address: f.place_name,
+          coordinates: f.center
+        }));
+
+        this.addMarkers(this.places);
+      })
+      .catch(err => {
+        console.error('Error en la búsqueda:', err);
+      });
+  }
+
+  addMarkers(places: any[]) {
+    // Elimina los anteriores
+    this.markers.forEach(marker => marker.remove());
+    this.markers = [];
+
+    // Agrega nuevos
+    for (const place of places) {
+      const marker = new mapboxgl.Marker()
+        .setLngLat(place.coordinates)
+        .addTo(this.map);
+      this.markers.push(marker);
+    }
   }
 }

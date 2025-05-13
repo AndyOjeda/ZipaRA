@@ -1,0 +1,15 @@
+.modelo-container {
+  text-align: center;
+  background: #111;
+  color: white;
+  padding: 20px;
+}
+
+button {
+  background-color: #c4ff00;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-top: 10px;
+  font-weight: bold;
+}

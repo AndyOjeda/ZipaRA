@@ -1,18 +1,61 @@
 <div class="detail-container">
-  <img [src]="image" alt="{{ name }}" class="detail-image" />
-  <div class="detail-info">
-    <h2>{{ name }}</h2>
-    <p class="detail-price">{{ price }}</p>
-    <p class="detail-location">📍 Zipaquirá, Colombia</p>
-    <p class="detail-description">
-      Bienvenido a {{ name }}. Disfruta de una experiencia inolvidable con los mejores servicios, confort y atención.
-    </p>
+  <div class="carousel">
+    <img *ngFor="let img of detail.images; let i = index"
+         [src]="img"
+         [class.active]="i === activeImageIndex" />
 
-    <div class="amenities">
-      <span>Café</span>
-      <span>WiFi</span>
-      <span>Parqueadero</span>
-      <span>Restaurante</span>
+    <!-- Botones flotantes -->
+    <button (click)="goBack()" class="btn-floating back-btn"><i class="pi pi-arrow-left"></i></button>
+    <button class="btn-floating fav-btn"><i class="pi pi-heart"></i></button>
+
+    <div class="carousel-controls">
+      <button (click)="prevImage()">‹</button>
+      <button (click)="nextImage()">›</button>
     </div>
   </div>
+
+  <div class="info-box">
+    <div class="info-header">
+      <div>
+        <h2 class="hotel-title">{{ detail.name }}</h2>
+        <p class="location">📍 {{ detail.location }}</p>
+      </div>
+      <div class="right-info">
+        <p class="price">${{ detail.price }} <span>/Night</span></p>
+        <p class="rating">
+          <i class="pi pi-star-fill" style="color: gold;"></i>
+          {{ detail.rating }} ({{ detail.reviews }} Reviews)
+        </p>
+      </div>
+    </div>
+
+    <div class="amenities">
+      <h4>Amenities</h4>
+      <div class="icons-row">
+        <div *ngFor="let a of detail.amenities" class="amenity-icon">
+          <i [class]="a.icon"></i><span>{{ a.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="description">
+      <h4>Description</h4>
+      <p>{{ detail.description }}</p>
+    </div>
+
+    <div class="gallery">
+      <h4>Gallery</h4>
+      <div class="gallery-images">
+        <img *ngFor="let img of detail.gallery" [src]="img" />
+      </div>
+    </div>
+
+    <div class="map">
+      <h4>Location</h4>
+      <div id="map" class="mapbox-map"></div>
+    </div>
+
+  </div>
 </div>
+
+<app-bottom-nav></app-bottom-nav>

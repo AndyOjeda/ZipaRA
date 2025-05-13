@@ -3,18 +3,18 @@
     type="text"
     placeholder="Buscar restaurantes, hoteles..."
     [(ngModel)]="searchQuery"
-    (keyup.enter)="searchPlaces()"
+    (keyup.enter)="searchPlace()"
   />
-  <button class="action-btn" (click)="searchPlaces()">Buscar</button>
+  <button class="action-btn" (click)="searchPlace()">Buscar</button>
 </div>
 
 <div id="map" class="map-container"></div>
 
 <!-- Resultados -->
 <div class="results-container" *ngIf="places.length > 0">
-  <div class="place-card" *ngFor="let place of places">
-    <div class="icon-circle"><i class="fa fa-map-marker"></i></div>
-    <div>
+  <div class="place-card" *ngFor="let place of places" (click)="flyTo(place.coordinates)">
+    <img src="https://source.unsplash.com/100x100/?place,city" class="place-img" />
+    <div class="place-info">
       <h4>{{ place.name }}</h4>
       <p>{{ place.address }}</p>
     </div>

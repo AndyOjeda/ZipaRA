@@ -24,8 +24,8 @@ p {
 }
 
 .scanner-frame {
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 550px;
   border: 3px dashed #d7fc39;
   border-radius: 16px;
   display: flex;
