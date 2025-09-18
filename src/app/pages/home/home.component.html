@@ -3,7 +3,7 @@
     <div class="user-info">
       <img src="assets/img/icon.jpg" alt="Profile" class="avatar" />
       <div>
-        <p class="hello">Hey, Vale 👋</p>
+        <p class="hello">Hey, {{usuario?.nombre}} 👋</p>
         <p class="location">📍 Zipaquirá</p>
       </div>
     </div>
@@ -22,58 +22,49 @@
     <div class="icons-row">
       <div class="icon-btn active"><i class="pi pi-home"></i><span>Hoteles</span></div>
       <div class="icon-btn"><i class="pi pi-shop"></i><span>Restaurantes</span></div>
-      <div class="icon-btn"><i class="pi pi-th-large"></i><span>Actividades</span></div>
-      <div class="icon-btn"><i class="pi pi-car"></i><span>Transporte</span></div>
+      <div class="icon-btn"><i class="pi pi-th-large"></i><span>Eventos</span></div>
     </div>
   </section>
 
+  <!-- Hoteles dinámicos -->
   <section class="popular-trips">
     <div class="section-header">
       <h3>Hoteles Populares</h3>
       <a href="#">See more</a>
     </div>
     <div class="trip-cards">
-      <div class="trip-card" (click)="goToDetail('Camino de Sal', 'assets/img/hotel.jpg', '$124/person')">
-        <img src="assets/img/hotel.jpg" alt="Camino de Sal" />
+      <div class="trip-card" *ngFor="let h of hoteles"
+           (click)="goToDetail(h.nombre, h.imagen, h.precio)">
+        <img [src]="h.imagen" [alt]="h.nombre" />
         <div class="card-info">
-          <p class="place-name">Camino de Sal</p>
-          <p class="price">$124/person</p>
-        </div>
-      </div>
-
-      <div class="trip-card" (click)="goToDetail('Hormuz Island', 'assets/img/hotel.jpg', '$120/person')">
-        <img src="assets/img/hotel.jpg" alt="Hormuz Island" />
-        <div class="card-info">
-          <p class="place-name">Hormuz Island</p>
-          <p class="price">$120/person</p>
+          <p class="place-name">{{h.nombre}}</p>
+          <p class="price">{{h.precio}}</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Restaurantes dinámicos -->
   <section class="categories">
     <div class="section-header">
-      <h3>Filtros</h3>
+      <h3>Restaurantes</h3>
       <a href="#">See more</a>
     </div>
-    <div class="category-buttons">
-      <button>🏖 Beach</button>
-      <button>🌳 Forest</button>
-      <button>🏕 Camping</button>
-      <button>🗿 History</button>
+    <div class="trip-cards">
+      <div class="trip-card small" *ngFor="let r of restaurantes">
+        <img [src]="r.imagen" [alt]="r.nombre" />
+        <p class="place-name">{{r.nombre}}</p>
+      </div>
     </div>
   </section>
 
+  <!-- Eventos dinámicos -->
   <section class="recommended">
-    <h3>Hoteles Recomendados</h3>
+    <h3>Eventos</h3>
     <div class="trip-cards">
-      <div class="trip-card small">
-        <img src="assets/img/hotel.jpg" alt="Red Beach" />
-        <p class="place-name">Red Beach</p>
-      </div>
-      <div class="trip-card small">
-        <img src="assets/img/hotel.jpg" alt="Salt Goddess" />
-        <p class="place-name">Salt Goddess</p>
+      <div class="trip-card small" *ngFor="let e of eventos">
+        <img [src]="e.imagen" [alt]="e.nombre" />
+        <p class="place-name">{{e.nombre}}</p>
       </div>
     </div>
   </section>

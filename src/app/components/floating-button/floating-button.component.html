@@ -1,0 +1,68 @@
+<!-- FAB Menu -->
+<div class="fixed bottom-20 right-4 z-50 flex flex-col items-end space-y-3">
+
+  <!-- Opciones -->
+  <div *ngIf="isOpen" class="flex flex-col space-y-3 mb-3">
+
+    <button (click)="openDialog('hotel')" 
+      class="flex items-center px-3 py-2 bg-white shadow-md rounded-full hover:bg-gray-100 transition">
+      🏨 <span class="ml-2 text-gray-700">Hotel</span>
+    </button>
+
+    <button (click)="openDialog('restaurante')" 
+      class="flex items-center px-3 py-2 bg-white shadow-md rounded-full hover:bg-gray-100 transition">
+      🍴 <span class="ml-2 text-gray-700">Restaurante</span>
+    </button>
+
+    <button (click)="openDialog('evento')" 
+      class="flex items-center px-3 py-2 bg-white shadow-md rounded-full hover:bg-gray-100 transition">
+      🎉 <span class="ml-2 text-gray-700">Evento</span>
+    </button>
+
+    <button (click)="openDialog('actividad')" 
+      class="flex items-center px-3 py-2 bg-white shadow-md rounded-full hover:bg-gray-100 transition">
+      🌍 <span class="ml-2 text-gray-700">Actividad</span>
+    </button>
+  </div>
+
+  <!-- Botón principal -->
+  <button (click)="toggleMenu()" 
+    class="w-14 h-14 flex items-center justify-center rounded-full bg-[#B5DB0C] text-white shadow-lg hover:scale-110 transition">
+    +
+  </button>
+</div>
+
+<!-- ========== Dialog Modal ========== -->
+<div *ngIf="showDialog" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+  <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+    
+    <h2 class="text-lg font-bold text-gray-800 mb-4">
+      Crear {{ selectedType | titlecase }}
+    </h2>
+
+    <!-- Form -->
+    <form (ngSubmit)="createEntity()">
+      <label class="block mb-2 text-sm text-gray-600">Nombre</label>
+      <input [(ngModel)]="entityData.nombre" name="nombre"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-[#B5DB0C]" 
+        placeholder="Ingresa el nombre..." />
+
+      <label class="block mb-2 text-sm text-gray-600">Descripción</label>
+      <textarea [(ngModel)]="entityData.descripcion" name="descripcion"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-[#B5DB0C]"
+        placeholder="Describe brevemente..."></textarea>
+
+      <!-- Botones -->
+      <div class="flex justify-end space-x-2">
+        <button type="button" (click)="closeDialog()"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+          Cancelar
+        </button>
+        <button type="submit"
+          class="px-4 py-2 bg-[#B5DB0C] text-white rounded-lg hover:bg-[#9AC00B]">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

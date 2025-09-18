@@ -9,9 +9,11 @@ import { ScanComponent } from './pages/scan/scan.component';
 import { Modelos3dComponent } from './pages/modelos3d/modelos3d.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
+import { SetupPreferenciesComponent } from './pages/IA/setup-preferencies/setup-preferencies.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
+  { path: 'preferencias', component: SetupPreferenciesComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent },
   { path: 'map', component: MapComponent },

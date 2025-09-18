@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:3000" });
+const API = axios.create({ baseURL: "http://localhost:4000/api" });
 
 // Hoteles
 export const getHoteles = () => API.get("/hoteles");
@@ -36,3 +36,14 @@ export const getUsuarios = () => API.get("/usuarios");
 export const createUsuario = (data: any) => API.post("/usuarios", data);
 export const updateUsuario = (id: number, data: any) => API.put(`/usuarios/${id}`, data);
 export const deleteUsuario = (id: number) => API.delete(`/usuarios/${id}`);
+
+// Preferencias
+export const getPreferencias = () => API.get("/preferencias"); // todas
+export const getPreferenciaByUser = (userId: number) => API.get(`/preferencias/usuario/${userId}`);
+export const createPreferencia = (data: any) => API.post("/preferencias", data);
+export const updatePreferencia = (id: number, data: any) => API.put(`/preferencias/${id}`, data);
+export const deletePreferencia = (id: number) => API.delete(`/preferencias/${id}`);
+
+// Categorías
+export const getCategorias = () => API.get("/categorias");
+export const createCategorias = (data: any) => API.post("/categorias", data);

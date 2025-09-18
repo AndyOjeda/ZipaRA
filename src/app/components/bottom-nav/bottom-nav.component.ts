@@ -16,6 +16,7 @@ export class BottomNavComponent {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const url = event.urlAfterRedirects;
+        if (url.includes('/home')) this.activeLink = 'home';
         if (url.includes('/map')) this.activeLink = 'map';
         else if (url.includes('/scan')) this.activeLink = 'camera';
         else if (url.includes('/favorites')) this.activeLink = 'favorites';
