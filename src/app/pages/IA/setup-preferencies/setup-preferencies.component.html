@@ -26,8 +26,38 @@
       </button>
     </div>
 
+        <!-- Paso 3: Dinero -->
+    <div *ngIf="step === 2" class="space-y-3">
+      <p class="text-gray-700 font-medium">¿Cuál es tu presupuesto?</p>
+      <button *ngFor="let option of budgetOptions"
+        (click)="selectOption('activityType', option)"
+        class="w-full px-4 py-2 border rounded-lg hover:bg-[#B5DB0C] hover:text-white">
+        {{ option }}
+      </button>
+    </div>
+
+        <!-- Paso 2: Tipo de actividad -->
+    <div *ngIf="step === 3" class="space-y-3">
+      <p class="text-gray-700 font-medium">¿Como te gusta salir?</p>
+      <button *ngFor="let option of travelStyleOptions"
+        (click)="selectOption('activityType', option)"
+        class="w-full px-4 py-2 border rounded-lg hover:bg-[#B5DB0C] hover:text-white">
+        {{ option }}
+      </button>
+    </div>
+
+        <!-- Paso 2: Tipo de actividad -->
+    <div *ngIf="step === 4" class="space-y-3">
+      <p class="text-gray-700 font-medium">¿Qué te gusta más?</p>
+      <button *ngFor="let option of scheduleOptions"
+        (click)="selectOption('activityType', option)"
+        class="w-full px-4 py-2 border rounded-lg hover:bg-[#B5DB0C] hover:text-white">
+        {{ option }}
+      </button>
+    </div>
+
     <!-- Paso final -->
-    <div *ngIf="step === 2" class="text-center">
+    <div *ngIf="step === 5" class="text-center">
       <p class="text-gray-700 mb-4">🎉 ¡Gracias! Ya tenemos tus preferencias.</p>
       <button (click)="finishSetup()"
         class="px-6 py-2 bg-[#B5DB0C] text-white rounded-lg">

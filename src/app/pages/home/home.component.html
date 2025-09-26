@@ -17,57 +17,84 @@
     <button class="search-btn">🔍</button>
   </div>
 
+  <!-- Categorías -->
   <section class="book-now">
     <h3>Categorias</h3>
     <div class="icons-row">
-      <div class="icon-btn active"><i class="pi pi-home"></i><span>Hoteles</span></div>
-      <div class="icon-btn"><i class="pi pi-shop"></i><span>Restaurantes</span></div>
-      <div class="icon-btn"><i class="pi pi-th-large"></i><span>Eventos</span></div>
+      <div class="icon-btn"
+           *ngFor="let cat of categorias"
+           [class.active]="selectedCategory === cat.id"
+           (click)="selectedCategory = cat.id">
+        <i [class]="cat.icon"></i>
+        <span>{{cat.label}}</span>
+      </div>
     </div>
   </section>
 
-  <!-- Hoteles dinámicos -->
-  <section class="popular-trips">
+  <!-- ===== HOTELES ===== -->
+  <section class="popular-trips" *ngIf="selectedCategory === 'hoteles'">
     <div class="section-header">
-      <h3>Hoteles Populares</h3>
-      <a href="#">See more</a>
+      <h3 class="mt-2">Hoteles Populares</h3>
     </div>
     <div class="trip-cards">
-      <div class="trip-card" *ngFor="let h of hoteles"
-           (click)="goToDetail(h.nombre, h.imagen, h.precio)">
-        <img [src]="h.imagen" [alt]="h.nombre" />
+      <div class="trip-card" *ngFor="let h of hoteles" (click)="goToDetail(h.id)">
+        <img [src]="'http://localhost:4000' + h.imagen" [alt]="h.nombre" />
         <div class="card-info">
           <p class="place-name">{{h.nombre}}</p>
-          <p class="price">{{h.precio}}</p>
+          <p class="price">
+            {{ h.precio | currency:'USD':'symbol':'1.0-0':'en-US' }}
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Restaurantes dinámicos -->
-  <section class="categories">
+  <!-- ===== RESTAURANTES ===== -->
+  <section class="categories" *ngIf="selectedCategory === 'restaurantes'">
     <div class="section-header">
-      <h3>Restaurantes</h3>
-      <a href="#">See more</a>
+      <h3 class="mt-2">Restaurantes</h3>
     </div>
     <div class="trip-cards">
-      <div class="trip-card small" *ngFor="let r of restaurantes">
-        <img [src]="r.imagen" [alt]="r.nombre" />
-        <p class="place-name">{{r.nombre}}</p>
+      <div class="trip-card" *ngFor="let r of restaurantes" (click)="goToDetail(r.id)">
+        <img [src]="'http://localhost:4000' + r.imagen" [alt]="r.nombre" />
+        <div class="card-info">
+          <p class="place-name">{{ r.nombre }}</p>
+          <p class="price">
+            {{ r.precio_min | currency:'USD':'symbol':'1.0-0':'en-US' }} - 
+            {{ r.precio_max | currency:'USD':'symbol':'1.0-0':'en-US' }}
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Eventos dinámicos -->
-  <section class="recommended">
+  <!-- ===== EVENTOS ===== -->
+  <section class="recommended" *ngIf="selectedCategory === 'eventos'">
     <h3>Eventos</h3>
     <div class="trip-cards">
-      <div class="trip-card small" *ngFor="let e of eventos">
-        <img [src]="e.imagen" [alt]="e.nombre" />
-        <p class="place-name">{{e.nombre}}</p>
+      <div class="trip-card" *ngFor="let e of eventos" (click)="goToDetail(e.id)">
+        <img [src]="'http://localhost:4000' + e.imagen" [alt]="e.nombre" />
+        <div class="card-info">
+          <p class="place-name">{{ e.nombre }}</p>
+          <p class="price">📅 {{ e.fecha | date:'dd/MM/yyyy' }}</p>
+        </div>
       </div>
     </div>
   </section>
-</div>
 
-<app-bottom-nav></app-bottom-nav>
+  <!-- ===== ACTIVIDADES ===== -->
+  <section class="recommended" *ngIf="selectedCategory === 'actividades'">
+    <h3>Actividades</h3>
+    <div class="trip-cards">
+      <div class="trip-card" *ngFor="let a of actividades" (click)="goToDetail(a.id)">
+        <img [src]="'http://localhost:4000' + a.imagen" [alt]="a.nombre" />
+        <div class="card-info">
+          <p class="place-name">{{ a.nombre }}</p>
+          <p class="price"> {{ a.fecha | date:'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-bottom-nav></app-bottom-nav>
+</div>

@@ -25,6 +25,6 @@ export class AppComponent {
   }
 
   showFloatingButton(): boolean {
-    return !(this.currentRoute.includes('/login') || this.currentRoute.includes('/register'));
+    return !(this.currentRoute.includes('/login') || this.currentRoute.includes('/register') || this.currentRoute.includes('/profile'));
   }
 }

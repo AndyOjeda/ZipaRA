@@ -1,21 +1,37 @@
-<div class="favorites-container">
-  <h2>Mis Favoritos</h2>
+<div class="min-h-screen bg-gray-100 p-6">
+  <!-- Título -->
+  <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+    Mis Favoritos
+  </h1>
 
-  <div *ngIf="favorites.length === 0; else favoritesList" class="empty-state">
-    <i class="pi pi-heart-fill empty-icon"></i>
-    <p>No tienes ningún lugar guardado aún.</p>
-    <button class="explore-button" (click)="goExplore()">Explorar ahora</button>
+  <!-- Si no hay favoritos -->
+  <div *ngIf="favoritos.length === 0" class="text-center text-gray-500 mt-12">
+    <p class="text-lg">No tienes favoritos aún ❤️</p>
   </div>
 
-  <ng-template #favoritesList>
-    <div class="favorites-list">
-      <div class="favorite-card" *ngFor="let item of favorites">
-        <h3>{{ item.nombre }}</h3>
-        <p>{{ item.tipo }}</p>
-        <button class="go-button" (click)="goTo(item.link)">Ver</button>
+  <!-- Grid de favoritos -->
+  <div *ngIf="favoritos.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div
+      *ngFor="let fav of favoritos"
+      class="bg-white rounded-2xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden"
+      (click)="verDetalle(fav)"
+    >
+      <!-- Imagen -->
+      <img 
+      [src]="'http://localhost:4000' + (fav.hotel_imagen || fav.restaurante_imagen || fav.actividad_imagen)" 
+      alt="{{ fav.hotel_nombre || fav.restaurante_nombre || fav.actividad_titulo }}" 
+      class="h-48 w-full object-cover" 
+    />
+      <div class="p-4">
+        <h2 class="text-lg font-semibold text-gray-800">
+          {{ fav.hotel_nombre || fav.restaurante_nombre || fav.actividad_titulo }}
+        </h2>
+        <p class="text-sm text-gray-500 mt-1">
+          {{ fav.hotel_direccion || fav.restaurante_direccion || fav.actividad_direccion }}
+        </p>
+      </div>
       </div>
     </div>
-  </ng-template>
-</div>
+  </div>
 
 <app-bottom-nav></app-bottom-nav>

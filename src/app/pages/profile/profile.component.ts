@@ -32,6 +32,9 @@ import { deleteEvento } from '../../services/api.service';
 import { getCategorias } from '../../services/api.service';
 import { createCategorias } from '../../services/api.service';
 
+//Actividad
+import { createActividad } from '../../services/api.service';
+
 @Component({
   selector: 'app-profile',
   imports: [BottomNavComponent, CommonModule, FormsModule],
@@ -42,6 +45,7 @@ export class ProfileComponent {
 
   usuario: any = null;
   preferencias = { notificaciones: false, newsletter: false };
+  
 
   // Admin modal state
   showAdminDialog = false;
@@ -54,10 +58,43 @@ export class ProfileComponent {
   deleteMode = false;
   addMode = false;
 
+  availableComodidades: string[] = [
+  "wifi",
+  "parking",
+  "piscina",
+  "gimnasio",
+  "spa",
+  "restaurante",
+  "bar",
+  "servicioHab"
+];
+
   selectedItemId: number | null = null;
   selectedFile: File | null = null;
-  addData: any = { nombre: '', direccion: '', categoria_id: null, imagen: '' };
-    editData: any = { nombre: '', direccion: '', categoria_id: null, imagen: '' };
+  addData: any = { 
+    nombre: '', 
+    direccion: '', 
+    categoria_id: null, 
+    descripcion: '',
+    precio: null,
+    comodidades: '',
+    imagen: '' 
+  };
+
+  editData: any = { 
+    nombre: '', 
+    direccion: '', 
+    categoria_id: null, 
+    descripcion: '',
+    precio: null,
+    comodidades: '',
+    imagen: '' 
+  };
+
+  loadingMessage: string | null = null;
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
+
 
   async ngOnInit() {
     const data = localStorage.getItem('usuario');
@@ -93,9 +130,10 @@ export class ProfileComponent {
   async onEntitySelected() {
     this.resetModes();
     this.entities = [];
+    this.selectedItemId = null;
 
     // 🔹 Si selecciona hoteles, cargamos categorías dinámicamente
-    if (this.selectedEntity === 'hoteles') {
+    if (this.selectedEntity === 'hoteles' || this.selectedEntity === 'restaurantes' || this.selectedEntity === 'eventos' || this.selectedEntity === 'actividades') {
       try {
         this.categorias = (await getCategorias()).data;
       } catch (err) {
@@ -110,6 +148,32 @@ export class ProfileComponent {
     this.selectedFile = file;
   }
 }
+
+  prepareAdd() { 
+    this.resetModes(); 
+    this.addMode = true;  
+    this.addData = {
+      nombre: '',
+      direccion: '',
+      categoria_id: null,
+      descripcion: '',
+      precio: null,
+      comodidades: {}, // 👈 JSON para hoteles
+      imagen: ''
+    };
+  }
+
+  prepareEdit() { 
+    this.resetModes(); 
+    this.editMode = true; 
+    this.fetchEntities(); 
+  }
+
+  prepareDelete() { 
+  this.resetModes(); 
+  this.deleteMode = true; 
+  this.fetchEntities(); 
+  }
 
   async fetchEntities() {
     this.resetModes();
@@ -127,43 +191,101 @@ export class ProfileComponent {
     }
   }
 
-  prepareAdd() { this.resetModes(); this.addMode = true; }
-  prepareEdit() { this.resetModes(); this.editMode = true; }
-  prepareDelete() { this.resetModes(); this.deleteMode = true; }
-
   async saveAdd() {
+    this.loadingMessage = `Guardando ${this.selectedEntity}...`;
+    this.successMessage = null;
+    this.errorMessage = null;
+
     try {
+      let response;
+
       switch (this.selectedEntity) {
-        case 'hoteles': await createHotel(this.addData); break;
-        case 'restaurantes': await createRestaurante(this.addData); break;
-        case 'eventos': await createEvento(this.addData); break;
-        case 'usuarios': await createUsuario(this.addData); break;
-        case 'categorias': await createCategorias(this.addData);break;
+        case "categorias":
+          response = (await createCategorias(this.addData)).data;
+          break;
+
+        case "hoteles": {
+          const formData = this.toFormData(this.addData);
+          if (this.selectedFile) formData.append("imagen", this.selectedFile);
+          response = await createHotel(formData);
+          break;
+        }
+
+        case "restaurantes": {
+          const formData = this.toFormData(this.addData);
+          if (this.selectedFile) formData.append("imagen", this.selectedFile);
+          response = await createRestaurante(formData);
+          break;
+        }
+
+        case "eventos": {
+          const formData = this.toFormData(this.addData);
+          if (this.selectedFile) formData.append("imagen", this.selectedFile);
+          response = await createEvento(formData);
+          break;
+        }
+
+        case "actividades": {
+          const formData = this.toFormData(this.addData);
+          if (this.selectedFile) formData.append("imagen", this.selectedFile);
+          response = await createActividad(formData);
+          break;
+        }
+
+        default:
+          throw new Error("Entidad no soportada");
       }
-      this.fetchEntities();
+
+      this.successMessage = `${this.selectedEntity} creado con éxito 🎉`;
       this.addMode = false;
-      this.addData = { nombre: '' };
-    } catch (err) {
-      console.error('Error agregando entidad:', err);
+      this.selectedFile = null;
+      this.fetchEntities(); // 👈 refrescar tabla
+    } catch (err: any) {
+      this.errorMessage = `Error al guardar ${this.selectedEntity}`;
+      console.error(err);
+    } finally {
+      this.loadingMessage = null;
     }
   }
+
 
   async saveEdit() {
     try {
       if (!this.selectedItemId) return;
 
       switch (this.selectedEntity) {
-        case 'hoteles': await updateHotel(this.selectedItemId, this.editData); break;
-        case 'restaurantes': await updateRestaurante(this.selectedItemId, this.editData); break;
-        case 'eventos': await updateEvento(this.selectedItemId, this.editData); break;
-        case 'usuarios': await updateUsuario(this.selectedItemId, this.editData); break;
+        case 'hoteles': {
+          const formData = this.toFormData(this.editData);
+          if (this.selectedFile) {
+            formData.append('imagen', this.selectedFile);
+          }
+          await updateHotel(this.selectedItemId, formData);
+          break;
+        }
+
+        case 'restaurantes':
+          await updateRestaurante(this.selectedItemId, this.editData);
+          break;
+
+        case 'eventos':
+          await updateEvento(this.selectedItemId, this.editData);
+          break;
+
+        case 'usuarios':
+          await updateUsuario(this.selectedItemId, this.editData);
+          break;
       }
+
+      this.successMessage = `${this.selectedEntity} actualizado ✅`;
       this.fetchEntities();
       this.editMode = false;
+      this.selectedFile = null;
     } catch (err) {
-      console.error('Error editando entidad:', err);
+      this.errorMessage = `Error editando ${this.selectedEntity}`;
+      console.error(err);
     }
   }
+
 
   async deleteEntity() {
     try {
@@ -175,10 +297,36 @@ export class ProfileComponent {
         case 'eventos': await deleteEvento(this.selectedItemId); break;
         case 'usuarios': await deleteUsuario(this.selectedItemId); break;
       }
+
+      this.successMessage = `${this.selectedEntity} eliminado 🗑️`;
       this.fetchEntities();
       this.deleteMode = false;
     } catch (err) {
-      console.error('Error eliminando entidad:', err);
+      this.errorMessage = `Error eliminando ${this.selectedEntity}`;
+      console.error(err);
     }
   }
+
+
+  toFormData(data: any) {
+    const formData = new FormData();
+    for (const key in data) {
+      if (data[key] !== null && data[key] !== undefined) {
+        
+        // 👇 Si es un objeto (comodidades), lo pasamos a JSON string
+        if (key === 'comodidades' && typeof data[key] === 'object') {
+          formData.append(key, JSON.stringify(data[key]));
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+    }
+    return formData;
+  }
+
+
+  toggleComodidad(c: string) {
+  this.addData.comodidades[c] = !this.addData.comodidades[c];
+}
+
 }

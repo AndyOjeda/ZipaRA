@@ -1,60 +1,150 @@
-<div class="detail-container">
-  <div class="carousel">
+<div class="detail-container" *ngIf="detail">
+  <!-- 🔥 Carousel -->
+  <div class="relative h-72 overflow-hidden">
     <img *ngFor="let img of detail.images; let i = index"
          [src]="img"
-         [class.active]="i === activeImageIndex" />
+         [class.hidden]="i !== activeImageIndex"
+         class="w-full h-full object-cover transition-opacity duration-500 rounded-b-4xl"
+         alt="{{ detail.name }}" />
 
-    <!-- Botones flotantes -->
-    <button (click)="goBack()" class="btn-floating back-btn"><i class="pi pi-arrow-left"></i></button>
-    <button class="btn-floating fav-btn"><i class="pi pi-heart"></i></button>
+    <!-- Botón volver -->
+    <button (click)="goBack()" 
+      class="absolute top-4 left-4 w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
+      <i class="pi pi-arrow-left"></i>
+    </button>
 
-    <div class="carousel-controls">
-      <button (click)="prevImage()">‹</button>
-      <button (click)="nextImage()">›</button>
+    <!-- Botón favorito -->
+    <button (click)="toggleFavorito()" 
+      class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
+      <i class="pi" [ngClass]="isFavorito ? 'pi-heart-fill text-red-500' : 'pi-heart'"></i>
+    </button>
+
+    <!-- 🔥 Precio Hoteles arriba a la derecha -->
+    <div *ngIf="category === 'hoteles'" 
+         class="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg shadow text-sm">
+      <span class="text-lg font-bold">
+        {{ detail.price | currency:'USD':'symbol':'1.0-0':'en-US' }}
+      </span>
+      <span class="text-xs block text-gray-300">/Noche</span>
     </div>
   </div>
 
-  <div class="info-box">
-    <div class="info-header">
-      <div>
-        <h2 class="hotel-title">{{ detail.name }}</h2>
-        <p class="location">📍 {{ detail.location }}</p>
+  <!-- 🔥 Categoría etiqueta -->
+  <span class="absolute top-79 right-2 bg-black bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+    {{ category | titlecase }}
+  </span>
+
+  <!-- 🔥 Info -->
+  <div class="info-box p-5">
+    <!-- Título debajo de la imagen -->
+    <h2 class="text-2xl font-semibold break-words mt-2">{{ detail.name }}</h2>
+    <p class="text-gray-500 text-sm mb-4" [innerHTML]="detail.location?.replace(',', ',<br>')"></p>
+
+    <!-- 🔥 Info por categoría -->
+    <div class="text-left">
+      <!-- Eventos -->
+      <div *ngIf="category === 'eventos'">
+        <p class="font-semibold">Fecha</p>
+        <p class="text-gray-700 text-sm">{{ detail.fecha | date:'longDate' }}</p>
+        <p class="font-semibold mt-2">Hora</p>
+        <p class="text-gray-700 text-sm">{{ detail.hora | date:'shortTime':'es-CO' }}</p>
       </div>
-      <div class="right-info">
-        <p class="price">${{ detail.price }} <span>/Night</span></p>
-        <p class="rating">
-          <i class="pi pi-star-fill" style="color: gold;"></i>
-          {{ detail.rating }} ({{ detail.reviews }} Reviews)
-        </p>
+
+      <!-- Actividades -->
+      <div *ngIf="category === 'actividades'">
+        <p class="font-semibold">Fecha</p>
+        <p class="text-gray-700 text-sm">{{ detail.fecha | date:'longDate' }}</p>
+        <p class="font-semibold mt-2">Horario</p>
+        <p class="text-gray-700 text-sm">{{ detail.horario }}</p>
       </div>
     </div>
 
-    <div class="amenities">
-      <h4>Amenities</h4>
-      <div class="icons-row">
-        <div *ngFor="let a of detail.amenities" class="amenity-icon">
-          <i [class]="a.icon"></i><span>{{ a.name }}</span>
+    <!-- 🔥 Precios Restaurantes -->
+    <div *ngIf="category === 'restaurantes'" class="mt-5">
+      <h3 class="text-lg font-semibold">Costo de platos</h3>
+      <p class="text-gray-700 text-base">
+        {{ detail.precio_min | currency:'USD':'symbol':'1.0-0':'en-US' }}
+        -
+        {{ detail.precio_max | currency:'USD':'symbol':'1.0-0':'en-US' }}
+      </p>
+      <h3 class="text-lg font-semibold mt-4">Horario</h3>
+      <p class="text-gray-700 text-base">{{ detail.horario }}</p>
+      <h3 class="text-lg font-semibold mt-4">Teléfono</h3>
+      <p class="text-gray-700 text-base">{{ detail.telefono }}</p>
+    </div>
+
+    <!-- 🔥 Amenities SOLO para hoteles -->
+    <div class="amenities mt-5" *ngIf="category === 'hoteles' && detail.amenities">
+      <h3 class="text-lg font-semibold mb-3">Comodidades</h3>
+      <div class="flex flex-wrap gap-6 justify-center text-center">
+        <div *ngIf="detail.amenities.wifi" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <i class="pi pi-wifi"></i>
+          </button>
+          <span class="text-sm mt-1">Wifi</span>
+        </div>
+        <div *ngIf="detail.amenities.parking" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <i class="pi pi-car"></i>
+          </button>
+          <span class="text-sm mt-1">Parking</span>
+        </div>
+        <div *ngIf="detail.amenities.piscina" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <img class=" w-[32px]" src="assets/img/pool.jpg" alt="" />
+          </button>
+          <span class="text-sm mt-1">Piscina</span>
+        </div>
+        <div *ngIf="detail.amenities.gimnasio" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <img class=" w-[34px]" src="assets/img/gym.png" alt="" />
+          </button>
+          <span class="text-sm mt-1">Gimnasio</span>
+        </div>
+        <div *ngIf="detail.amenities.spa" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <img class=" w-[32px]" src="assets/img/spa.png" alt="" />
+          </button>
+          <span class="text-sm mt-1">Spa</span>
+        </div>
+        <div *ngIf="detail.amenities.restaurante" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <img class=" w-[34px]" src="assets/img/restaurant.jpg" alt="" />
+          </button>
+          <span class="text-sm mt-1">Restaurante</span>
+        </div>
+        <div *ngIf="detail.amenities.bar" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <img class=" w-[32px]" src="assets/img/bar.png" alt="" />
+          </button>
+          <span class="text-sm mt-1">Bar</span>
+        </div>
+        <div *ngIf="detail.amenities.servicioHab" class="flex flex-col items-center">
+          <button class="w-12 h-12 rounded-full bg-gray-100 border flex items-center justify-center text-xl shadow">
+            <i class="pi pi-home"></i>
+          </button>
+          <span class="text-sm mt-1">Servicio Hab.</span>
         </div>
       </div>
     </div>
 
-    <div class="description">
-      <h4>Description</h4>
-      <p>{{ detail.description }}</p>
+
+    <!-- 🔥 Descripción -->
+    <div class="description mt-6" *ngIf="detail.description">
+      <h3 class="text-lg font-semibold mb-2">Descripción</h3>
+      <p class="text-gray-700 leading-relaxed" [innerHTML]="detail.description.replace('.', '.<br><br>')"></p>
     </div>
 
-    <div class="gallery">
-      <h4>Gallery</h4>
-      <div class="gallery-images">
-        <img *ngFor="let img of detail.gallery" [src]="img" />
-      </div>
-    </div>
 
-    <div class="map">
-      <h4>Location</h4>
-      <div id="map" class="mapbox-map"></div>
+    <!-- 🔥 Mapa dinámico -->
+    <div class="map mt-6">
+      <h3 class="text-lg font-semibold mb-2">Ubicación</h3>
+      <div id="map" class="w-full h-64 rounded-lg shadow"></div>
+      <a [href]="detail.googleMapsUrl" target="_blank" 
+         class="inline-block mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
+        Ver en Google Maps
+      </a>
     </div>
-
   </div>
 </div>
 

@@ -16,8 +16,11 @@ export class SetupPreferenciesComponent implements OnInit {
   step: number = 0;
 
   // Opciones predefinidas
-  mainOptions: string[] = ['Lugares', 'Restaurantes', 'Deportes', 'Eventos'];
+  mainOptions: string[] = ['Hoteles', 'Restaurantes', 'Eventos', 'Actividades'];
   activityOptions: string[] = ['Actividades tranquilas', 'Deporte y aventura'];
+  budgetOptions: string[] = ['Económico', 'Medio', 'Premium'];
+  travelStyleOptions: string[] = ['Familiar', 'Pareja', 'Amigos', 'Solo'];
+  scheduleOptions: string[] = ['Día', 'Noche'];
 
   preferences: any = {};
 
@@ -37,9 +40,15 @@ export class SetupPreferenciesComponent implements OnInit {
     this.preferences[field] = value;
 
     if (this.step === 0) {
-      this.step = 1; // pasa a la siguiente pregunta
+      this.step = 1;
     } else if (this.step === 1) {
-      this.step = 2; // pasa a la pantalla final
+      this.step = 2;
+    } else if (this.step === 2) {
+      this.step = 3;
+    } else if (this.step === 3) {
+      this.step = 4;
+    } else if (this.step === 4) {
+      this.step = 5; // pantalla final
     }
   }
 
