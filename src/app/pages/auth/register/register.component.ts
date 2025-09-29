@@ -50,4 +50,8 @@ export class RegisterComponent {
       this.errorMessage = error.message || 'Error en registro';
     }
   }
+
+    goToLogin(): void {
+      this.router.navigate(['/']);
+  }
 }

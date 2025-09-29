@@ -44,4 +44,9 @@ export class LoginComponent {
       this.errorMessage = err.message || 'Correo o contraseña incorrecta';
     }
   }
+
+  goToRegister(): void {
+  this.router.navigate(['/register']);
+  }
+
 }

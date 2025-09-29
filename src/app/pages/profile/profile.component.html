@@ -25,10 +25,11 @@
       Administrar
     </button>
     
-    <button class="action-btn">
-      <i class="pi pi-cog"></i>
-      Configuración
-    </button>
+  <button class="action-btn" (click)="openConfigDialog()">
+    <i class="pi pi-cog"></i>
+    Configuración
+  </button>
+
 
     <button class="action-btn logout" (click)="cerrarSesion()">
       <i class="pi pi-sign-out"></i>
@@ -102,14 +103,26 @@
       
     </div>
 
-    <!-- Obtener resultados -->
-    <div *ngIf="entities.length > 0 && !addMode && !editMode && !deleteMode" class="mt-4">
-      <h3 class="font-semibold">Resultados:</h3>
-      <ul class="list-disc ml-6">
-        <li *ngFor="let e of entities">{{ e.nombre || e.email || ('Entidad ' + e.id) }}</li>
+    <!-- Lista de entidades -->
+    <div *ngIf="entities.length > 0 && !addMode && !editMode && !deleteMode" class="mt-6">
+      <ul class="space-y-2">
+        <li *ngFor="let e of entities"
+            class="px-4 py-3 bg-white rounded-lg shadow-sm border border-gray-200 
+                  hover:bg-gray-50 hover:shadow-md transition flex items-center justify-between">
+          <span class="text-gray-800 font-medium">
+            {{ e.nombre || e.email || ('Entidad ' + e.id) }}
+          </span>
+        </li>
       </ul>
-      <button (click)="entities=[]" class="mt-2 px-3 py-1 bg-gray-400 text-white rounded-lg">Atrás</button>
+
+      <div class="mt-4 text-center">
+        <button (click)="entities=[]" 
+                class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+          Atrás
+        </button>
+      </div>
     </div>
+
 
     <!-- Form de agregar -->
     <div *ngIf="addMode" class="mt-4 space-y-2">
@@ -227,23 +240,127 @@
 
     <!-- Editar -->
     <div *ngIf="editMode" class="mt-4">
-      <label class="block mb-1 text-sm">Selecciona item</label>
-      <select [(ngModel)]="selectedItemId" class="input-field mb-2">
-        <option *ngFor="let e of entities" [value]="e.id">{{ e.nombre || e.email }}</option>
+      <label class="block mb-2 text-sm font-medium">Selecciona {{ selectedEntity }}</label>
+      <select [(ngModel)]="selectedItemId" (change)="onItemSelected()" 
+              class="w-full px-4 py-2 border rounded-xl shadow-sm mb-4 focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]">
+        <option [ngValue]="null" disabled selected>Selecciona...</option>
+        <option *ngFor="let e of entities" [value]="e.id">
+          {{ e.nombre || e.email || ('Entidad ' + e.id) }}
+        </option>
       </select>
-      <input [(ngModel)]="editData.nombre" placeholder="Nuevo nombre" class="w-full px-4 py-2 border rounded-xl shadow-sm mb-3 focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
-      <button (click)="saveEdit()" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg">Guardar cambios</button>
-      <button (click)="resetModes()" class="w-full px-4 py-2 bg-gray-400 text-white rounded-lg">Atrás</button>
+
+      <!-- Formulario dinámico -->
+      <div *ngIf="selectedItemId" class="space-y-3">
+        
+        <!-- Nombre -->
+        <input [(ngModel)]="editData.nombre" placeholder="Nombre" 
+          class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+        <!-- Dirección (solo si aplica) -->
+        <input *ngIf="editData.direccion !== undefined" [(ngModel)]="editData.direccion" placeholder="Dirección"
+          class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+        <!-- Categoría -->
+        <select *ngIf="editData.categoria_id !== undefined" [(ngModel)]="editData.categoria_id"
+          class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]">
+          <option [ngValue]="null" disabled>Selecciona categoría</option>
+          <option *ngFor="let c of categorias" [value]="c.id">{{ c.nombre }}</option>
+        </select>
+
+        <!-- Descripción -->
+        <textarea *ngIf="editData.descripcion !== undefined" [(ngModel)]="editData.descripcion" placeholder="Descripción"
+          class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]"></textarea>
+
+        <!-- Para Hoteles -->
+        <input *ngIf="selectedEntity === 'hoteles' && editData.precio !== undefined" 
+              type="number" [(ngModel)]="editData.precio" placeholder="Precio por noche"
+              class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+        <!-- Para Restaurantes -->
+        <div *ngIf="selectedEntity === 'restaurantes'">
+          <input type="number" [(ngModel)]="editData.precio_min" placeholder="Precio mínimo"
+                class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+          <input type="number" [(ngModel)]="editData.precio_max" placeholder="Precio máximo"
+                class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+        </div>
+
+
+        <!-- Imagen -->
+        <label *ngIf="editData.imagen !== undefined" class="block text-sm font-medium text-gray-700">Imagen</label>
+        <input *ngIf="editData.imagen !== undefined" type="file" (change)="onFileSelected($event)" accept="image/*"
+          class="w-full px-4 py-2 border rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+      </div>
+
+      <!-- Botones -->
+      <div class="flex gap-3 mt-4">
+        <button (click)="saveEdit()" class="flex-1 px-4 py-2 bg-[#B5DB0C] text-white rounded-lg hover:bg-[#B5DB0C] transition">
+          Guardar cambios
+        </button>
+        <button (click)="resetModes()" class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition">
+          Cancelar
+        </button>
+      </div>
     </div>
 
-    <!-- Eliminar -->
-    <div *ngIf="deleteMode" class="mt-4">
-      <label class="block mb-1 text-sm">Selecciona item</label>
-      <select [(ngModel)]="selectedItemId" class="input-field mb-2">
-        <option *ngFor="let e of entities" [value]="e.id">{{ e.nombre || e.email }}</option>
-      </select>
-      <button (click)="deleteEntity()" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg">Eliminar</button>
-      <button (click)="resetModes()" class="w-full px-4 py-2 bg-gray-400 text-white rounded-lg">Atrás</button>
+
+  <!-- Eliminar -->
+  <div *ngIf="deleteMode" class="mt-4 space-y-3">
+    
+    <!-- Label -->
+    <label class="block mb-2 text-sm font-medium">Selecciona {{ selectedEntity }}</label>
+    
+    <!-- Selector -->
+    <select [(ngModel)]="selectedItemId"
+      class="w-full px-4 py-2 border rounded-xl shadow-sm mb-4 focus:outline-none focus:ring-2 focus:ring-red-500">
+      <option [ngValue]="null" disabled selected>Selecciona...</option>
+      <option *ngFor="let e of entities" [value]="e.id">
+        {{ e.nombre || e.email || ('Entidad ' + e.id) }}
+      </option>
+    </select>
+
+    <!-- Botones -->
+    <div class="flex gap-3">
+      <button (click)="deleteEntity()"
+        class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+        Eliminar
+      </button>
+      <button (click)="resetModes()"
+        class="flex-1 px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition">
+        Atrás
+      </button>
     </div>
   </div>
+
+
+  </div>
 </div>
+
+<!-- ========== MODAL CONFIG ========== -->
+<div *ngIf="showConfigDialog" class="top-50 fixed inset-0 bg-transparent bg-opacity-50 flex justify-center items-start overflow-y-auto z-50 p-6">
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8 animate-fadeIn">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Editar Perfil</h2>
+      <button (click)="closeConfigDialog()" class="text-gray-500 hover:text-gray-800 text-xl">✖</button>
+    </div>
+
+    <!-- Formulario de edición -->
+    <form (ngSubmit)="saveProfile()" class="space-y-4">
+      <input [(ngModel)]="editProfile.nombre" name="nombre" placeholder="Nombre" 
+        class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+      <input [(ngModel)]="editProfile.email" name="email" placeholder="Correo electrónico"
+        class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+      <input [(ngModel)]="editProfile.password" name="password" type="password" placeholder="Contraseña"
+        class="w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B5DB0C]" />
+
+      <!-- Guardar -->
+      <button type="submit" class="w-full px-4 py-2 bg-[#93B306] text-white rounded-lg">Guardar cambios</button>
+      <button type="button" (click)="closeConfigDialog()" class="w-full px-4 py-2 bg-gray-400 text-white rounded-lg">Cancelar</button>
+    </form>
+  </div>
+</div>
+

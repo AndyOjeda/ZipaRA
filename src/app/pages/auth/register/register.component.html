@@ -112,7 +112,12 @@
     <!-- Footer -->
     <div class="mt-6 text-center text-sm text-gray-600">
       ¿Ya tienes cuenta?
-      <a routerLink="/" class="text-[#B5DB0C] font-semibold hover:underline"> Inicia Sesión</a>
+    <button 
+      (click)="goToLogin()"
+      class="text-[#B5DB0C] font-semibold hover:underline"
+    >
+      Inicia Sesión
+    </button>
     </div>
   </div>
 </div>

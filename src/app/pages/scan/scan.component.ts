@@ -1,66 +1,138 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.component";
 import { Router } from '@angular/router';
 import { getHotelByTrigger } from '../../services/api.service';
-import { Html5Qrcode } from 'html5-qrcode';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-scan',
-  imports: [BottomNavComponent],
+  imports: [BottomNavComponent, CommonModule, FormsModule],
   templateUrl: './scan.component.html',
-  styleUrl: './scan.component.css'
+  styleUrl: './scan.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ScanComponent {
 
-   @ViewChild('video', { static: true }) video!: ElementRef<HTMLDivElement>;
-  scanning = false;
-  html5QrCode: Html5Qrcode | null = null;
+scanning = false;
+  hotel: any = null;
+  cargando = false;
+  currentCamera: 'user' | 'environment' = 'environment';
 
-  constructor(private router: Router) {}
+  @ViewChild('mindarContainer', { static: true }) mindarContainer!: ElementRef;
 
-  async startScan() {
-    if (this.scanning) return; // ya está escaneando
+  mindarThree: any;
+
+  // 📌 Diccionario de triggers → modelos
+  triggerMap: Record<string, any> = {
+    "HotelZipaquira": {
+      nombre: "Hotel Zipaquirá",
+      descripcion: "Hospedaje acogedor en el centro histórico.",
+      modelo3d: "/assets/modelo3d/caciqueReal.glb",
+      id: "hotel-1"
+    },
+    "ReligionZipaquira": {
+      nombre: "Catedral de Sal",
+      descripcion: "Lugar de peregrinación y maravilla arquitectónica.",
+      modelo3d: "/assets/modelo3d/religion.glb",
+      id: "religion-1"
+    },
+    "GastronomiaZipaquira": {
+      nombre: "Gastronomía local",
+      descripcion: "Sabores tradicionales de la región.",
+      modelo3d: "/assets/modelo3d/gastronomia.glb",
+      id: "gastronomia-1"
+    },
+    "EstatuaZipaquira": {
+      nombre: "Estatua histórica",
+      descripcion: "Monumento representativo de la ciudad.",
+      modelo3d: "/assets/modelo3d/estatua.glb",
+      id: "estatua-1"
+    },
+    "PiedrasZipaquira": {
+      nombre: "Formaciones rocosas",
+      descripcion: "Piedras ancestrales de gran valor cultural.",
+      modelo3d: "/assets/modelo3d/piedras.glb",
+      id: "piedras-1"
+    },
+    "PlazaPrincipal": {
+      nombre: "Plaza principal",
+      descripcion: "Centro de encuentro y cultura.",
+      modelo3d: "/assets/modelo3d/plaza.glb",
+      id: "plaza-1"
+    },
+    "20241118_155423773_ios1": {
+      nombre: "Trigger especial",
+      descripcion: "Contenido único escaneado.",
+      modelo3d: "/assets/modelo3d/caciqueReal.glb",
+      id: "especial-1"
+    }
+  };
+
+  startScan() {
     this.scanning = true;
 
-    this.html5QrCode = new Html5Qrcode("reader");
+    this.mindarThree = new (window as any).MINDAR.IMAGE.MindARThree({
+      container: this.mindarContainer.nativeElement,
+      imageTargetSrc: '/assets/triggers.mind',
+      uiLoading: "no",
+      uiScanning: "no",
+      uiError: "no",
+      videoSettings: { facingMode: this.currentCamera }
+    });
 
+    const { renderer, scene, camera } = this.mindarThree;
+
+    // 🔗 Recorremos todos los triggers registrados en el .mind
+    Object.keys(this.triggerMap).forEach((triggerName, index) => {
+      const anchor = this.mindarThree.addAnchor(index);
+
+      anchor.onTargetFound = () => {
+        console.log(`✅ Trigger detectado: ${triggerName}`);
+        this.loadHotelData(triggerName);
+      };
+
+      anchor.onTargetLost = () => {
+        console.log(`❌ Trigger perdido: ${triggerName}`);
+        this.hotel = null;
+      };
+    });
+
+    const start = async () => {
+      await this.mindarThree.start();
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
+    };
+    start();
+  }
+
+  async loadHotelData(triggerName: string) {
+    this.cargando = true;
     try {
-      await this.html5QrCode.start(
-        { facingMode: "environment" }, // cámara trasera
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 }
-        },
-        async (decodedText) => {
-          console.log("📌 Trigger detectado:", decodedText);
-
-          // 👉 buscar en backend
-          try {
-            const res = await getHotelByTrigger(decodedText);
-            console.log("🏨 Respuesta backend:", res.data);
-          } catch (err) {
-            console.error("❌ Error al consultar backend:", err);
-          }
-
-          // opcional: parar después de primer escaneo
-          this.stopScan();
-        },
-        (errorMessage) => {
-          // se ignoran errores de lectura
-        }
-      );
+      const data = this.triggerMap[triggerName];
+      this.hotel = data;
     } catch (err) {
-      console.error("⚠️ No se pudo iniciar cámara:", err);
-      this.scanning = false;
+      console.error("❌ Error cargando el modelo:", err);
+    } finally {
+      this.cargando = false;
     }
   }
 
-  stopScan() {
-    if (this.html5QrCode) {
-      this.html5QrCode.stop().then(() => {
-        console.log("⏹️ Escaneo detenido");
-        this.scanning = false;
-      });
+  verUbicacion() {
+    if (this.hotel?.id) {
+      window.location.href = `/map/${this.hotel.id}`;
+    }
+  }
+
+  swapCamera() {
+    this.currentCamera = this.currentCamera === 'environment' ? 'user' : 'environment';
+    console.log("🔄 Cambiando a cámara:", this.currentCamera);
+
+    if (this.mindarThree) {
+      this.mindarThree.stop();
+      this.startScan();
     }
   }
 }

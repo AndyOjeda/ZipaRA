@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { getProfile, logout } from '../../services/auth.service';
 
 // Hoteles
-import { getHoteles } from '../../services/api.service';
+import { getActividades, getHoteles } from '../../services/api.service';
 import { createHotel } from '../../services/api.service';
 import { updateHotel } from '../../services/api.service';
 import { deleteHotel } from '../../services/api.service';
@@ -57,6 +57,10 @@ export class ProfileComponent {
   editMode = false;
   deleteMode = false;
   addMode = false;
+
+  // Datos editables
+  showConfigDialog = false;
+  editProfile: any = { nombre: '', email: '', password: '' };
 
   availableComodidades: string[] = [
   "wifi",
@@ -127,6 +131,21 @@ export class ProfileComponent {
     this.addMode = false;
   }
 
+  private showTemporaryMessage(type: 'success' | 'error', message: string) {
+  if (type === 'success') {
+    this.successMessage = message;
+  } else {
+    this.errorMessage = message;
+  }
+
+  // ⏳ limpiar después de 10 segundos
+  setTimeout(() => {
+    if (type === 'success') this.successMessage = null;
+    if (type === 'error') this.errorMessage = null;
+  }, 10000);
+}
+
+
   async onEntitySelected() {
     this.resetModes();
     this.entities = [];
@@ -163,11 +182,12 @@ export class ProfileComponent {
     };
   }
 
-  prepareEdit() { 
-    this.resetModes(); 
-    this.editMode = true; 
-    this.fetchEntities(); 
-  }
+async prepareEdit() {
+  this.resetModes();
+  await this.fetchEntities();
+  this.editMode = true;
+}
+
 
   prepareDelete() { 
   this.resetModes(); 
@@ -176,12 +196,12 @@ export class ProfileComponent {
   }
 
   async fetchEntities() {
-    this.resetModes();
     try {
       switch (this.selectedEntity) {
         case 'hoteles': this.entities = (await getHoteles()).data; break;
         case 'restaurantes': this.entities = (await getRestaurantes()).data; break;
         case 'eventos': this.entities = (await getEventos()).data; break;
+        case 'actividades': this.entities = (await getActividades()).data; break;
         case 'usuarios': this.entities = (await getUsuarios()).data; break;
         case 'categorias': this.entities = (await getCategorias()).data;break;
         default: this.entities = [];
@@ -236,12 +256,12 @@ export class ProfileComponent {
           throw new Error("Entidad no soportada");
       }
 
-      this.successMessage = `${this.selectedEntity} creado con éxito 🎉`;
+      this.showTemporaryMessage('success', `${this.selectedEntity} creado con éxito 🎉`);
       this.addMode = false;
       this.selectedFile = null;
       this.fetchEntities(); // 👈 refrescar tabla
     } catch (err: any) {
-      this.errorMessage = `Error al guardar ${this.selectedEntity}`;
+      this.showTemporaryMessage('error', `Error al guardar ${this.selectedEntity}`);
       console.error(err);
     } finally {
       this.loadingMessage = null;
@@ -262,30 +282,27 @@ export class ProfileComponent {
           await updateHotel(this.selectedItemId, formData);
           break;
         }
-
         case 'restaurantes':
           await updateRestaurante(this.selectedItemId, this.editData);
           break;
-
         case 'eventos':
           await updateEvento(this.selectedItemId, this.editData);
           break;
-
         case 'usuarios':
           await updateUsuario(this.selectedItemId, this.editData);
           break;
       }
 
-      this.successMessage = `${this.selectedEntity} actualizado ✅`;
+      this.showTemporaryMessage('success', `${this.selectedEntity} actualizado`);
       this.fetchEntities();
       this.editMode = false;
       this.selectedFile = null;
+
     } catch (err) {
-      this.errorMessage = `Error editando ${this.selectedEntity}`;
+      this.showTemporaryMessage('error', `Error editando ${this.selectedEntity}`);
       console.error(err);
     }
   }
-
 
   async deleteEntity() {
     try {
@@ -298,15 +315,14 @@ export class ProfileComponent {
         case 'usuarios': await deleteUsuario(this.selectedItemId); break;
       }
 
-      this.successMessage = `${this.selectedEntity} eliminado 🗑️`;
+      this.showTemporaryMessage('success', `${this.selectedEntity} eliminado 🗑️`);
       this.fetchEntities();
       this.deleteMode = false;
     } catch (err) {
-      this.errorMessage = `Error eliminando ${this.selectedEntity}`;
+      this.showTemporaryMessage('error', `Error eliminando ${this.selectedEntity}`);
       console.error(err);
     }
   }
-
 
   toFormData(data: any) {
     const formData = new FormData();
@@ -328,5 +344,67 @@ export class ProfileComponent {
   toggleComodidad(c: string) {
   this.addData.comodidades[c] = !this.addData.comodidades[c];
 }
+
+
+  openConfigDialog() {
+    this.showConfigDialog = true;
+
+    // 🚀 Cargar datos actuales del usuario desde localStorage
+    const data = localStorage.getItem('usuario');
+    if (data) {
+      const user = JSON.parse(data);
+      this.editProfile = {
+        nombre: user.nombre || '',
+        email: user.email || '',
+        password: user.password || ''
+      };
+    }
+  }
+
+  async saveProfile() {
+    try {
+      if (!this.usuario?.id) {
+        throw new Error("No se encontró ID de usuario");
+      }
+
+      // 🔹 Llamar al service para actualizar en el backend
+      const updatedUser = await updateUsuario(this.usuario.id, this.editProfile);
+
+      // 🔹 Refrescar localStorage con lo que devuelva el backend
+      localStorage.setItem('usuario', JSON.stringify(updatedUser.data));
+
+      // 🔹 Actualizar variable usuario (para mostrar cambios en la vista)
+      this.usuario = updatedUser.data;
+
+
+      // 🔹 Cerrar modal
+      this.closeConfigDialog();
+    } catch (err) {
+      console.error("Error actualizando perfil:", err);
+    }
+  }
+
+
+  closeConfigDialog() {
+  this.showConfigDialog = false;
+  }
+
+  onItemSelected() {
+  const item = this.entities.find(e => e.id === Number(this.selectedItemId));
+  if (item) {
+    // Clonamos el objeto para no modificar el original
+    this.editData = { ...item };
+
+    // Si es hotel/restaurante/evento, aseguramos que los campos existan
+    if (this.selectedEntity === 'hoteles' || this.selectedEntity === 'restaurantes' || this.selectedEntity === 'eventos' || this.selectedEntity === 'actividades') {
+      if (!this.editData.descripcion) this.editData.descripcion = '';
+      if (!this.editData.direccion) this.editData.direccion = '';
+      if (!this.editData.categoria_id) this.editData.categoria_id = null;
+      if (!this.editData.precio) this.editData.precio = null;
+    }
+  }
+  }
+
+
 
 }
