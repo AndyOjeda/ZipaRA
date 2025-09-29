@@ -1,10 +1,18 @@
 <div class="scan-container">
   <h2>Escanear imagen</h2>
-  <p>Apunta la cámara a una imagen para generar un modelo 3D.</p>
+  <p>Apunta la cámara a un trigger (QR o imagen registrada).</p>
 
-  <video #video autoplay playsinline class="scanner-frame"></video>
+  <!-- aquí renderiza el lector -->
+  <div id="reader" class="scanner-frame"></div>
 
-  <button class="scan-button" (click)="startScan()">Iniciar escaneo</button>
+  <div class="scan-actions">
+    <button class="scan-button" (click)="startScan()">
+      {{ scanning ? 'Escaneando...' : 'Iniciar escaneo' }}
+    </button>
+    <button class="swap-button" (click)="stopScan()" [disabled]="!scanning">
+      ⏹️ Detener
+    </button>
+  </div>
 </div>
 
 <app-bottom-nav></app-bottom-nav>

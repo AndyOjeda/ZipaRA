@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 .scan-container {
   display: flex;
   flex-direction: column;
@@ -28,20 +27,16 @@ p {
   height: 350px;
   border: 3px dashed #d7fc39;
   border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin-bottom: 20px;
   background-color: rgba(255, 255, 255, 0.03);
-  transition: border-color 0.3s ease;
 }
 
-.scan-icon {
-  font-size: 48px;
-  color: #d7fc39;
+.scan-actions {
+  display: flex;
+  gap: 12px;
 }
 
-.scan-button {
+.scan-button, .swap-button {
   background-color: #d7fc39;
   color: #000;
   border: none;
@@ -50,9 +45,20 @@ p {
   border-radius: 40px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+}
+
+.swap-button {
+  background-color: #444;
+  color: #fff;
 }
 
 .scan-button:hover {
   background-color: #e7ff65;
+  transform: scale(1.05);
+}
+
+.swap-button:hover {
+  background-color: #666;
   transform: scale(1.05);
 }

@@ -14,21 +14,30 @@ import { CommonModule } from '@angular/common';
 })
 export class Modelos3dComponent {
 
- hotel: any;
+   hotel: any = null;
+  cargando = true;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    fetch(`http://localhost:3000/hoteles/${id}`)
+    // ⚡ Ajusta el puerto al mismo que expone tu backend
+    fetch(`http://localhost:4000/api/hoteles/${id}`)
       .then(res => res.json())
       .then(data => {
         this.hotel = data;
+        this.cargando = false;
+      })
+      .catch(err => {
+        console.error("❌ Error cargando el modelo 3D:", err);
+        this.cargando = false;
       });
   }
 
   verUbicacion() {
-    this.router.navigate(['/map', this.hotel.id]);
+    if (this.hotel?.id) {
+      this.router.navigate(['/map', this.hotel.id]);
+    }
   }
 }

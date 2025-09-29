@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:4000/api" });
+const API = axios.create({ baseURL: "https://backend-zipa-ra.vercel.app/api" });
 
 // Helper para enviar con multipart/form-data
 const multipartConfig = {
@@ -87,3 +87,7 @@ export async function searchAll(query: string) {
   if (!res.ok) throw new Error("Error en búsqueda");
   return res.json();
 }
+
+// ---------------- RA (Realidad Aumentada) ----------------
+export const scanTrigger = (trigger: string) =>
+  API.get(`/ra/scan/${encodeURIComponent(trigger)}`);

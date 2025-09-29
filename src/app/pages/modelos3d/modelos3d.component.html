@@ -1,4 +1,4 @@
-<div class="modelo-container" *ngIf="hotel">
+<div class="modelo-container" *ngIf="!cargando && hotel; else cargandoTpl">
   <model-viewer
     [src]="hotel.modelo3d"
     alt="Modelo 3D"
@@ -9,8 +9,17 @@
     style="width: 100%; height: 550px;"
   ></model-viewer>
 
-  <h2>{{ hotel.nombre }}</h2>
-  <p>{{ hotel.descripcion }}</p>
+  <div class="info">
+    <h2>{{ hotel.nombre }}</h2>
+    <p>{{ hotel.descripcion }}</p>
+  </div>
 
-  <button (click)="verUbicacion()">Ver ubicación</button>
+  <button class="ubicacion-btn" (click)="verUbicacion()">📍 Ver ubicación</button>
 </div>
+
+<ng-template #cargandoTpl>
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Cargando modelo 3D...</p>
+  </div>
+</ng-template>
