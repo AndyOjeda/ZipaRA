@@ -38,89 +38,70 @@ export class DetailComponent implements OnInit ,AfterViewInit {
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    const nav = this.router.getCurrentNavigation();
     this.category = this.route.snapshot.paramMap.get('category') || 'hoteles';
-
 
     const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
     const usuario_id = usuario?.id;
 
-    if (id) {
-      try {
-        let res: any;
+    if (!id) return;
 
-        switch (this.category) {
-          case 'hoteles':
-            res = await getHoteles();
-            break;
-          case 'restaurantes':
-            res = await getRestaurantes();
-            break;
-          case 'eventos':
-            res = await getEventos();
-            break;
-          case 'actividades':
-            res = await getActividades();
-            break;
-          default:
-            res = { data: [] };
+    try {
+      let res: any;
+
+      switch (this.category) {
+        case 'hoteles':
+          res = await getHoteles();
+          break;
+        case 'restaurantes':
+          res = await getRestaurantes();
+          break;
+        case 'eventos':
+          res = await getEventos();
+          break;
+        case 'actividades':
+          res = await getActividades();
+          break;
+        default:
+          res = { data: [] };
+      }
+
+      this.detail = res.data.find((item: any) => item.id == id);
+
+      if (this.detail) {
+        // Normalizar propiedades comunes
+        this.detail.name = this.detail.nombre || this.detail.titulo || "Sin nombre";
+        this.detail.location = this.detail.direccion || "Zipaquirá";
+        this.detail.rating = this.detail.resenas || 4.5;
+        this.detail.amenities = this.detail.comodidades
+          ? (typeof this.detail.comodidades === 'string'
+              ? JSON.parse(this.detail.comodidades)
+              : this.detail.comodidades)
+          : {};
+        this.detail.description = this.detail.descripcion || "Sin descripción disponible.";
+        this.detail.images = [`http://localhost:4000${this.detail.imagen}`];
+
+        this.detail.googleMapsUrl =
+          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(this.detail.location)}`;
+
+        // Precios según categoría
+        if (this.category === 'hoteles') {
+          this.detail.price = this.detail.precio || 0;
+        } else if (this.category === 'restaurantes') {
+          this.detail.precio_min = this.detail.precio_min || 0;
+          this.detail.precio_max = this.detail.precio_max || 0;
+        } else {
+          this.detail.price = this.detail.precio || 0;
         }
 
-        this.detail = res.data.find((item: any) => item.id == id);
-
-        if (this.detail) {
-          // Normalizar propiedades comunes
-          this.detail.name = this.detail.nombre || this.detail.titulo || "Sin nombre";
-          this.detail.location = this.detail.direccion || "Zipaquirá";
-          this.detail.rating = this.detail.resenas || 4.5;
-          this.detail.amenities = this.detail.comodidades
-            ? (typeof this.detail.comodidades === 'string'
-                ? JSON.parse(this.detail.comodidades)
-                : this.detail.comodidades)
-            : {};
-          this.detail.description = this.detail.descripcion || "Sin descripción disponible.";
-          this.detail.images = [`http://localhost:4000${this.detail.imagen}`];
-
-          // Google Maps URL lista
-          this.detail.googleMapsUrl =
-            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(this.detail.location)}`;
-
-          // ✅ Precios según categoría
-          if (this.category === 'hoteles') {
-            this.detail.price = this.detail.precio || 0;
-          } else if (this.category === 'restaurantes') {
-            this.detail.precio_min = this.detail.precio_min || 0;
-            this.detail.precio_max = this.detail.precio_max || 0;
-          } else if (this.category === 'eventos') {
-            this.detail.price = this.detail.precio || 0; // Precio entrada
-          } else if (this.category === 'actividades') {
-            this.detail.price = this.detail.precio || 0; // Precio actividad
-          }
-
-          // ✅ Coordenadas (default si no existen)
-          this.detail.lat = Number(this.detail.lat) || 5.0221;
-          this.detail.lng = Number(this.detail.lng) || -74.0048;
-        }
-      } catch (err) {
-        console.error('Error cargando detalle:', err);
+        // Coordenadas por defecto
+        this.detail.lat = Number(this.detail.lat) || 5.0221;
+        this.detail.lng = Number(this.detail.lng) || -74.0048;
       }
+    } catch (err) {
+      console.error('Error cargando detalle:', err);
     }
 
-    // Intentar geocodificar dirección si no hay coordenadas válidas
-    if (this.detail?.location && (!this.detail.lat || !this.detail.lng)) {
-      const coords = await this.geocodeAddress(this.detail.location);
-      if (coords) {
-        this.detail.lat = coords.lat;
-        this.detail.lng = coords.lng;
-      }
-    }
-
-    // Inicializar mapa
-    if (this.detail?.lat && this.detail?.lng) {
-      this.initMap(this.detail.lat, this.detail.lng);
-    }
-
-    // ✅ Verificar favoritos
+    // Validar favoritos
     if (usuario_id && this.detail) {
       const { data: favoritos } = await getFavoritos(usuario_id);
 
@@ -133,8 +114,21 @@ export class DetailComponent implements OnInit ,AfterViewInit {
 
       if (fav) {
         this.isFavorito = true;
-        this.favoritoId = fav.id;
+        this.favoritoId = fav.id;   // 👈 PK de la tabla favoritos
       }
+    }
+
+    // Intentar geocodificar si no hay coordenadas válidas
+    if (this.detail?.location && (!this.detail.lat || !this.detail.lng)) {
+      const coords = await this.geocodeAddress(this.detail.location);
+      if (coords) {
+        this.detail.lat = coords.lat;
+        this.detail.lng = coords.lng;
+      }
+    }
+
+    if (this.detail?.lat && this.detail?.lng) {
+      this.initMap(this.detail.lat, this.detail.lng);
     }
   }
 
@@ -219,7 +213,7 @@ export class DetailComponent implements OnInit ,AfterViewInit {
 
       const res = await addFavorito(payload);
       this.isFavorito = true;
-      this.favoritoId = res.data.id;
+      this.favoritoId = res.data.id; // 👈 guarda el id que devuelve el backend
     }
   }
 }

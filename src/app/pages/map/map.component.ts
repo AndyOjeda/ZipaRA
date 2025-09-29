@@ -50,9 +50,12 @@ export class MapComponent implements OnInit {
       const lastActividad = actividadesRes.data.at(-1);
       const lastEvento = eventosRes.data.at(-1);
 
-      this.places = [lastRestaurante, lastHotel, lastActividad, lastEvento]
-        .filter(Boolean)
-        .map(p => this.mapPlace(p));
+      this.places = [
+        this.mapPlace(lastRestaurante, 'restaurantes'),
+        this.mapPlace(lastHotel, 'hoteles'),
+        this.mapPlace(lastActividad, 'actividades'),
+        this.mapPlace(lastEvento, 'eventos')
+      ].filter(Boolean);
 
       this.addMarkers(this.places);
     } catch (err) {
@@ -60,25 +63,26 @@ export class MapComponent implements OnInit {
     }
   }
 
+  /** Buscar en backend */
   async searchPlace() {
     const query = this.searchQuery.trim();
 
     if (!query) {
-      // Si no hay búsqueda → restauramos últimos 4
       await this.loadLastPlaces();
       return;
     }
 
     try {
-      // Llamada al backend usando tu api.service
-      const res: any = await searchAll(query);
+      const results: any = await searchAll(query);
+      const data = results.data || results; // ✅ maneja ambos casos
 
-      // Asegurar que res.data exista
-      const data = Array.isArray(res.data) ? res.data : [];
+      this.places = [
+        ...data.hoteles.map((h: any) => this.mapPlace(h, 'hoteles')),
+        ...data.restaurantes.map((r: any) => this.mapPlace(r, 'restaurantes')),
+        ...data.eventos.map((e: any) => this.mapPlace(e, 'eventos')),
+        ...data.actividades.map((a: any) => this.mapPlace(a, 'actividades'))
+      ];
 
-      this.places = data.map((p: any) => this.mapPlace(p));
-
-      // Dibujar marcadores en el mapa
       this.addMarkers(this.places);
     } catch (err) {
       console.error("❌ Error en búsqueda", err);
@@ -86,23 +90,25 @@ export class MapComponent implements OnInit {
     }
   }
 
-
   /** Normaliza un registro de la API */
-  private mapPlace(p: any) {
+  private mapPlace(p: any, tipo?: string) {
     const baseUrl = 'http://localhost:4000';
     return {
       id: p.id,
+      tipo: tipo || p.tipo || 'general',
       name: p.nombre || p.titulo,
-      address: p.direccion || p.ubicacion || "Sin dirección",
-      price: p.precio ? `$${p.precio}` : "Consultar",
+      address: p.direccion || p.ubicacion || p.address || "Sin dirección", // ✅ más robusto
+      price: p.precio
+        ? `$${p.precio}`
+        : (p.precio_min && p.precio_max
+            ? `$${p.precio_min} - $${p.precio_max}`
+            : "Consultar"),
       coordinates: [p.longitud || -74.00, p.latitud || 5.02],
       image: p.imagen
         ? (p.imagen.startsWith('/uploads') ? `${baseUrl}${p.imagen}` : p.imagen)
         : "https://source.unsplash.com/300x200/?travel"
     };
   }
-
-
 
   addMarkers(places: any[]) {
     this.markers.forEach(marker => marker.remove());
@@ -117,8 +123,20 @@ export class MapComponent implements OnInit {
   }
 
   goToDetail(place: any) {
-    this.router.navigate(['/detail/:id'], { state: { place } });
+    this.router.navigate([`/detail/${place.tipo}/${place.id}`], {
+      state: { place }
+    });
   }
 
-  
+  /** Buscar en tiempo real mientras escribe */
+  async onSearchChange() {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      await this.loadLastPlaces();
+      return;
+    }
+
+    await this.searchPlace();
+  }
 }
