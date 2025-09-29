@@ -15,10 +15,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class ScanComponent {
 
-scanning = false;
+  scanning = false;
   hotel: any = null;
   cargando = false;
-  currentCamera: 'user' | 'environment' = 'environment';
+  currentCamera: 'environment' | 'user' = 'environment';
+
 
   @ViewChild('mindarContainer', { static: true }) mindarContainer!: ElementRef;
 
@@ -79,12 +80,14 @@ scanning = false;
       uiLoading: "no",
       uiScanning: "no",
       uiError: "no",
-      videoSettings: { facingMode: this.currentCamera }
+      videoSettings: {
+        facingMode: this.currentCamera // ✅ sin { exact: 'environment' }
+      }
     });
+
 
     const { renderer, scene, camera } = this.mindarThree;
 
-    // 🔗 Recorremos todos los triggers registrados en el .mind
     Object.keys(this.triggerMap).forEach((triggerName, index) => {
       const anchor = this.mindarThree.addAnchor(index);
 
@@ -107,6 +110,7 @@ scanning = false;
     };
     start();
   }
+
 
   async loadHotelData(triggerName: string) {
     this.cargando = true;
