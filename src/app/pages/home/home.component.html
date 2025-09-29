@@ -12,10 +12,25 @@
     </div>
   </header>
 
+  <!-- 🔍 Barra de búsqueda -->
   <div class="search-bar">
-    <input type="text" placeholder="Encuentra lugares interesantes..." />
-    <button class="search-btn">🔍</button>
+    <input [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange($event)"
+          type="text"
+          placeholder="Encuentra lugares interesantes..." />
+    <button class="search-btn" (click)="onSearchChange(searchQuery)">🔍</button>
   </div>
+
+  <!-- 📋 Lista de resultados simples debajo del buscador -->
+  <ul class="search-results" *ngIf="searchQuery && searchResults.length > 0">
+    <li class="search-item"
+        *ngFor="let item of searchResults"
+        (click)="goToSearchDetail(item)">
+      <i class="fas fa-search"></i>
+      <span>{{ item.nombre }}</span>
+    </li>
+  </ul>
+
 
   <!-- Categorías -->
   <section class="book-now">
@@ -76,7 +91,7 @@
         <img [src]="'http://localhost:4000' + e.imagen" [alt]="e.nombre" />
         <div class="card-info">
           <p class="place-name">{{ e.nombre }}</p>
-          <p class="price">📅 {{ e.fecha | date:'dd/MM/yyyy' }}</p>
+          <p class="price">{{ e.fecha | date:'dd/MM/yyyy' }}</p>
         </div>
       </div>
     </div>

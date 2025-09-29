@@ -8,27 +8,24 @@
   <button class="action-btn" (click)="searchPlace()">Buscar</button>
 </div>
 
+<!-- MAPA -->
 <div id="map" class="map-container"></div>
 
-<!-- Resultados -->
+<!-- CARDS SOBRE EL MAPA -->
 <div class="results-container" *ngIf="places.length > 0">
   <div class="place-card" *ngFor="let place of places">
-    <div class="place-card-body">
-      <img [src]="place.image" class="place-img" />
+    <img [src]="place.image" class="place-img" />
 
-      <div class="place-details">
-        <div class="place-top">
-          <h4>{{ place.name }}</h4>
-          <p>{{ place.address }}</p>
-        </div>
-        <div class="place-actions">
-          <button class="fav-btn" (click)="toggleFavorite(place)">❤️</button>
-          <button class="details-btn" (click)="goToDetail(place)">Ver más</button>
-        </div>
-      </div>
+    <div class="place-info">
+      <h3>{{ place.name }}</h3>
+      <p class="address">{{ place.address }}</p>
+      <p class="price">$60,000 – $80,000</p>
+
+      <button class="details-btn" (click)="goToDetail(place)">
+        Ver Detalles
+      </button>
     </div>
   </div>
 </div>
-
 
 <app-bottom-nav></app-bottom-nav>

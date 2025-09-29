@@ -2,9 +2,7 @@
   <h2>Escanear imagen</h2>
   <p>Apunta la cámara a una imagen para generar un modelo 3D.</p>
 
-  <div class="scanner-frame">
-    <i class="pi pi-camera scan-icon"></i>
-  </div>
+  <video #video autoplay playsinline class="scanner-frame"></video>
 
   <button class="scan-button" (click)="startScan()">Iniciar escaneo</button>
 </div>

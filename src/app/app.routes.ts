@@ -21,5 +21,5 @@ export const routes: Routes = [
   { path: 'favorites', component: FavoritesComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'detail/:category/:id', component: DetailComponent },
-  { path: 'modelo3d', component: Modelos3dComponent },
+  { path: 'modelo3d/:id', component: Modelos3dComponent },
 ];

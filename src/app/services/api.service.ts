@@ -9,6 +9,9 @@ const multipartConfig = {
 
 // ------------------ Hoteles ------------------
 export const getHoteles = () => API.get("/hoteles");
+export const getHotelById = (id: number) => API.get(`/hoteles/${id}`);
+export const getHotelByTrigger = (trigger: string) =>
+  API.get(`/hoteles/trigger/${encodeURIComponent(trigger)}`);
 export const createHotel = (data: FormData) =>
   API.post("/hoteles", data, multipartConfig);
 export const updateHotel = (id: number, data: FormData) =>
@@ -77,3 +80,10 @@ export const deletePreferencia = (id: number) =>
 export const getCategorias = () => API.get("/categorias");
 export const createCategorias = (data: any) =>
   API.post("/categorias", data);
+
+
+export async function searchAll(query: string) {
+  const res = await fetch(`http://localhost:4000/api/search?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error("Error en búsqueda");
+  return res.json();
+}

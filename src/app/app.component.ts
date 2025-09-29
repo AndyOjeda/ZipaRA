@@ -8,7 +8,7 @@ import { FloatingButtonComponent } from "./components/floating-button/floating-b
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, GoogleMapsModule, CommonModule, FormsModule, FloatingButtonComponent],
+  imports: [RouterOutlet, GoogleMapsModule, CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -25,6 +25,6 @@ export class AppComponent {
   }
 
   showFloatingButton(): boolean {
-    return !(this.currentRoute.includes('/login') || this.currentRoute.includes('/register') || this.currentRoute.includes('/profile'));
+    return !(this.currentRoute.includes('/login') || this.currentRoute.includes('/register') || this.currentRoute.includes('/profile') || this.currentRoute.includes('/scan')  || this.currentRoute.includes('/modelo3d') );
   }
 }

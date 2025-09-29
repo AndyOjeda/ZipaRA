@@ -4,22 +4,28 @@ import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.compo
 import { getHoteles, getRestaurantes, getEventos, getActividades } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import localeEsCO from '@angular/common/locales/es-CO';
+import { searchAll } from '../../services/api.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true, // Angular 15+ standalone components
-  imports: [BottomNavComponent, CommonModule],
+  imports: [BottomNavComponent, CommonModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
 
- usuario: any = null;
+   usuario: any = null;
   hoteles: any[] = [];
   restaurantes: any[] = [];
   eventos: any[] = [];
   actividades: any[] = [];
   selectedCategory: string = 'hoteles';
+
+  // 🔍 Búsqueda
+  searchResults: any[] = [];
+  searchQuery: string = "";
 
   categorias = [
     { id: 'hoteles', icon: 'pi pi-home', label: 'Hoteles' },
@@ -85,4 +91,34 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // 🔍 Buscar mientras escribe
+  async onSearchChange(query: string) {
+    this.searchQuery = query;
+
+    if (!query.trim()) {
+      this.searchResults = [];
+      return;
+    }
+
+    try {
+      const results = await searchAll(this.searchQuery);
+
+      this.searchResults = [
+        ...results.hoteles.map((h: any) => ({ ...h, tipo: 'hoteles' })),
+        ...results.restaurantes.map((r: any) => ({ ...r, tipo: 'restaurantes' })),
+        ...results.eventos.map((e: any) => ({ ...e, tipo: 'eventos' })),
+        ...results.actividades.map((a: any) => ({ ...a, tipo: 'actividades' }))
+      ];
+    } catch (err) {
+      console.error("Error buscando:", err);
+    }
+  }
+
+  goToSearchDetail(item: any) {
+    this.router.navigate([`/detail/${item.tipo}/${item.id}`], {
+      state: { category: item.tipo }
+    });
+    this.searchResults = []; // limpiar después de seleccionar
+    this.searchQuery = "";   // limpiar input
+  }
 }

@@ -1,6 +1,6 @@
-<div class="modelo-container">
+<div class="modelo-container" *ngIf="hotel">
   <model-viewer
-    src="assets/img/Estatua.glb"
+    [src]="hotel.modelo3d"
     alt="Modelo 3D"
     auto-rotate
     camera-controls
@@ -9,7 +9,8 @@
     style="width: 100%; height: 550px;"
   ></model-viewer>
 
+  <h2>{{ hotel.nombre }}</h2>
+  <p>{{ hotel.descripcion }}</p>
+
   <button (click)="verUbicacion()">Ver ubicación</button>
 </div>
-
-<app-bottom-nav></app-bottom-nav>
