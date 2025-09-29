@@ -1,3 +1,4 @@
+<!-- 🔎 Barra de búsqueda -->
 <div class="search-container">
   <input
     type="text"
@@ -8,24 +9,28 @@
   <button class="action-btn" (click)="searchPlace()">Buscar</button>
 </div>
 
-<!-- MAPA -->
+<!-- 🗺️ Mapa -->
 <div id="map" class="map-container"></div>
 
-<!-- CARDS SOBRE EL MAPA -->
+<!-- 📍 Cards modernas -->
 <div class="results-container" *ngIf="places.length > 0">
-  <div class="place-card" *ngFor="let place of places">
-    <img [src]="place.image" class="place-img" />
+  <div class="modern-card" *ngFor="let place of places">
+    <img [src]="place.image" alt="{{ place.name }}" class="modern-card-img" />
 
-    <div class="place-info">
+    <!-- Overlay oscuro -->
+    <div class="modern-card-overlay"></div>
+
+    <!-- Contenido -->
+    <div class="modern-card-content">
       <h3>{{ place.name }}</h3>
       <p class="address">{{ place.address }}</p>
-      <p class="price">$60,000 – $80,000</p>
-
-      <button class="details-btn" (click)="goToDetail(place)">
-        Ver Detalles
+      <p class="price">{{ place.price }}</p>
+      <button class="modern-btn" (click)="goToDetail(place)">
+        Ver Más
       </button>
     </div>
   </div>
 </div>
 
+<!-- Barra de navegación -->
 <app-bottom-nav></app-bottom-nav>

@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { getHoteles, getActividades, getEventos, getRestaurantes, searchAll } from '../../services/api.service';
 
 @Component({
   selector: 'app-map',
@@ -14,92 +15,94 @@ import { Router } from '@angular/router';
 })
 export class MapComponent implements OnInit {
 
-   constructor(private router: Router) {}
+    constructor(private router: Router) {}
 
   map!: mapboxgl.Map;
   searchQuery: string = '';
   places: any[] = [];
   markers: mapboxgl.Marker[] = [];
 
-predefinedPlaces = [
-  {
-    name: 'Catedral de Sal',
-    address: 'Zipaquirá, Cundinamarca',
-    coordinates: [-74.0104, 5.0189],
-    image: 'assets/img/catedral.jpg'
-  },
-  {
-    name: 'Hotel Cacique Real',
-    address: 'Carrera 10 #4-36, Zipaquirá',
-    coordinates: [-74.0067, 5.0235],
-    image: 'https://source.unsplash.com/300x200/?hotel'
-  },
-  {
-    name: 'Restaurante Funzipa',
-    address: 'Calle 5 #9-31, Zipaquirá',
-    coordinates: [-74.0078, 5.0185],
-    image: 'https://source.unsplash.com/300x200/?restaurant'
-  }
-];
-
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [-74.00, 5.02],
       zoom: 13.5,
-      accessToken: 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A' // ✅ PASADO AQUÍ
+      accessToken: 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A'
     });
+
+    // 🔥 Al cargar, traemos los últimos registros
+    await this.loadLastPlaces();
   }
 
-  flyTo(coords: [number, number]) {
-    this.map.flyTo({ center: coords, zoom: 15 });
+  /** Obtiene el último registro de cada colección */
+  async loadLastPlaces() {
+    try {
+      const [hotelesRes, restaurantesRes, actividadesRes, eventosRes] = await Promise.all([
+        getHoteles(),
+        getRestaurantes(),
+        getActividades(),
+        getEventos()
+      ]);
+
+      const lastHotel = hotelesRes.data.at(-1);
+      const lastRestaurante = restaurantesRes.data.at(-1);
+      const lastActividad = actividadesRes.data.at(-1);
+      const lastEvento = eventosRes.data.at(-1);
+
+      this.places = [lastRestaurante, lastHotel, lastActividad, lastEvento]
+        .filter(Boolean)
+        .map(p => this.mapPlace(p));
+
+      this.addMarkers(this.places);
+    } catch (err) {
+      console.error("Error cargando últimos registros", err);
+    }
   }
 
-  searchPlace() {
-  const query = this.searchQuery.trim().toLowerCase();
+  async searchPlace() {
+    const query = this.searchQuery.trim();
 
-  if (!query) {
-    this.places = [];
-    this.clearMarkers();
-    return;
+    if (!query) {
+      // Si no hay búsqueda → restauramos últimos 4
+      await this.loadLastPlaces();
+      return;
+    }
+
+    try {
+      // Llamada al backend usando tu api.service
+      const res: any = await searchAll(query);
+
+      // Asegurar que res.data exista
+      const data = Array.isArray(res.data) ? res.data : [];
+
+      this.places = data.map((p: any) => this.mapPlace(p));
+
+      // Dibujar marcadores en el mapa
+      this.addMarkers(this.places);
+    } catch (err) {
+      console.error("❌ Error en búsqueda", err);
+      this.places = [];
+    }
   }
 
-  const filtered = this.predefinedPlaces.filter(place =>
-    place.name.toLowerCase().includes(query) ||
-    place.address.toLowerCase().includes(query)
-  );
 
-  if (filtered.length > 0) {
-    this.places = filtered;
-    this.addMarkers(filtered);
-  } else {
-    const accessToken = 'pk.eyJ1IjoiYW5kcmVzb2plZGEyMCIsImEiOiJjbWFpZGloOWIwbmF4MnFvY3RwMWFqdnBsIn0.Ap1NaGLQzmyX9UXAG_rm3A';
-    const bbox = '-74.06,5.00,-73.97,5.08';
-
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?bbox=${bbox}&access_token=${accessToken}`)
-      .then(res => res.json())
-      .then(data => {
-        this.places = data.features.map((f: any) => ({
-          name: f.text,
-          address: f.place_name,
-          coordinates: f.center,
-          image: `https://source.unsplash.com/300x200/?${f.text}`
-        }));
-        this.addMarkers(this.places);
-      })
-      .catch(err => {
-        console.error('Error en la búsqueda:', err);
-      });
+  /** Normaliza un registro de la API */
+  private mapPlace(p: any) {
+    const baseUrl = 'http://localhost:4000';
+    return {
+      id: p.id,
+      name: p.nombre || p.titulo,
+      address: p.direccion || p.ubicacion || "Sin dirección",
+      price: p.precio ? `$${p.precio}` : "Consultar",
+      coordinates: [p.longitud || -74.00, p.latitud || 5.02],
+      image: p.imagen
+        ? (p.imagen.startsWith('/uploads') ? `${baseUrl}${p.imagen}` : p.imagen)
+        : "https://source.unsplash.com/300x200/?travel"
+    };
   }
-}
 
 
-  clearMarkers() {
-  this.markers.forEach(marker => marker.remove());
-  this.markers = [];
-}
 
   addMarkers(places: any[]) {
     this.markers.forEach(marker => marker.remove());
@@ -114,12 +117,8 @@ predefinedPlaces = [
   }
 
   goToDetail(place: any) {
-    this.router.navigate(['/detail'], { state: { place } });
+    this.router.navigate(['/detail/:id'], { state: { place } });
   }
 
-  toggleFavorite(place: any): void {
-  place.isFavorite = !place.isFavorite;
-  // Aquí puedes guardar en localStorage o enviar a backend si deseas
-}
-
+  
 }
