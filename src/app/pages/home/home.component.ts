@@ -16,6 +16,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent implements OnInit {
 
+  readonly link = 'https://backend-zipa-ra.vercel.app/api';
+  //readonly link = 'http://localhost:4000/api';
+
    usuario: any = null;
   hoteles: any[] = [];
   restaurantes: any[] = [];
@@ -51,7 +54,7 @@ export class HomeComponent implements OnInit {
       }
 
       // Consultar preferencias
-      const res = await fetch(`http://localhost:4000/api/preferencias/usuario/${this.usuario.id}`);
+      const res = await fetch(`${this.link}/preferencias/usuario/${this.usuario.id}`);
       const preferencias = await res.json();
 
       if (!preferencias || preferencias.length === 0) {
