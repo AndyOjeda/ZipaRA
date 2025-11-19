@@ -1,9 +1,8 @@
 import { Component, ElementRef, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.component";
-import { Router } from '@angular/router';
-import { getHotelByTrigger } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 
 
 @Component({
@@ -15,17 +14,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class ScanComponent {
 
-  scanning = false;
+   scanning = false;
   hotel: any = null;
   cargando = false;
   currentCamera: 'environment' | 'user' = 'environment';
 
-
   @ViewChild('mindarContainer', { static: true }) mindarContainer!: ElementRef;
 
   mindarThree: any;
+  anchor: any;
 
-  // 📌 Diccionario de triggers → modelos
   triggerMap: Record<string, any> = {
     "HotelZipaquira": {
       nombre: "Hotel Zipaquirá",
@@ -41,13 +39,13 @@ export class ScanComponent {
     },
     "EstatuaZipaquira": {
       nombre: "Estatua histórica",
-      descripcion: "Monumento representativo de la ciudad.",
+      descripcion: "Monumento representativo.",
       modelo3d: "/assets/modelo3d/estatua.glb",
       id: "estatua-1"
     },
     "PiedrasZipaquira": {
       nombre: "Formaciones rocosas",
-      descripcion: "Piedras ancestrales de gran valor cultural.",
+      descripcion: "Piedras ancestrales.",
       modelo3d: "/assets/modelo3d/piedras.glb",
       id: "piedras-1"
     },
@@ -59,72 +57,99 @@ export class ScanComponent {
     }
   };
 
-  startScan() {
+  // ----------------------------------------------
+  // 🚀 INICIAR ESCANEO
+  // ----------------------------------------------
+  async startScan() {
+    if (!(window as any).MINDAR?.IMAGE) {
+      console.error("⚠️ MindAR no cargó todavía");
+      return;
+    }
+
     this.scanning = true;
 
+    // Destruir instancias previas
+    if (this.mindarThree) {
+      try { await this.mindarThree.stop(); } catch {}
+    }
+
+    // Inicializar motor
     this.mindarThree = new (window as any).MINDAR.IMAGE.MindARThree({
       container: this.mindarContainer.nativeElement,
-      imageTargetSrc: '/assets/triggers.mind',
+      imageTargetSrc: "/assets/triggers.mind",
       uiLoading: "no",
       uiScanning: "no",
       uiError: "no",
       videoSettings: {
-        facingMode: this.currentCamera // ✅ sin { exact: 'environment' }
+        facingMode: this.currentCamera
       }
     });
 
-
     const { renderer, scene, camera } = this.mindarThree;
 
-    Object.keys(this.triggerMap).forEach((triggerName, index) => {
-      const anchor = this.mindarThree.addAnchor(index);
+    // Anchor universal
+    this.anchor = this.mindarThree.addAnchor(0);
 
-      anchor.onTargetFound = () => {
-        console.log(`✅ Trigger detectado: ${triggerName}`);
-        this.loadHotelData(triggerName);
-      };
-
-      anchor.onTargetLost = () => {
-        console.log(`❌ Trigger perdido: ${triggerName}`);
-        this.hotel = null;
-      };
-    });
-
-    const start = async () => {
-      await this.mindarThree.start();
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
+    // Detectar cuando encuentra un trigger
+    this.anchor.onTargetFound = () => {
+      console.log("🎯 Target detectado");
+      const triggerName = this.getTriggerNameFromIndex(0);
+      this.loadHotelData(triggerName);
     };
-    start();
+
+    this.anchor.onTargetLost = () => {
+      console.log("❌ Target perdido");
+    };
+
+    await this.mindarThree.start();
+
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
   }
 
+  // ------------------------------------------------------------------
+  // 🧠 Mapear índice del .mind → nombre del trigger
+  // ------------------------------------------------------------------
+  getTriggerNameFromIndex(index: number) {
+    const keys = Object.keys(this.triggerMap);
+    return keys[index];
+  }
 
+  // ------------------------------------------------------------------
+  // 📌 Cargar datos del trigger detectado
+  // ------------------------------------------------------------------
   async loadHotelData(triggerName: string) {
     this.cargando = true;
+
     try {
-      const data = this.triggerMap[triggerName];
-      this.hotel = data;
+      this.hotel = this.triggerMap[triggerName];
     } catch (err) {
-      console.error("❌ Error cargando el modelo:", err);
+      console.error("❌ Error cargando:", err);
     } finally {
       this.cargando = false;
     }
   }
 
+  // ------------------------------------------------------------------
+  // 📍 Mandar a mapa
+  // ------------------------------------------------------------------
   verUbicacion() {
     if (this.hotel?.id) {
       window.location.href = `/map/${this.hotel.id}`;
     }
   }
 
-  swapCamera() {
+  // ------------------------------------------------------------------
+  // 🔄 Cambiar Cámara
+  // ------------------------------------------------------------------
+  async swapCamera() {
     this.currentCamera = this.currentCamera === 'environment' ? 'user' : 'environment';
-    console.log("🔄 Cambiando a cámara:", this.currentCamera);
 
     if (this.mindarThree) {
-      this.mindarThree.stop();
-      this.startScan();
+      await this.mindarThree.stop();
     }
+
+    this.startScan();
   }
 }
