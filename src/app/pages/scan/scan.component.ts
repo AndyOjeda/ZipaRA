@@ -30,7 +30,7 @@ export class ScanComponent {
     "HotelZipaquira": {
       nombre: "Hotel Zipaquirá",
       descripcion: "Hospedaje acogedor en el centro histórico.",
-      modelo3d: "/assets/modelo3d/caciqueReal.glb",
+      modelo3d: "/assets/modelo3d/hotelZipaquira.glb",
       id: "hotel-1"
     },
     "ReligionZipaquira": {
@@ -38,12 +38,6 @@ export class ScanComponent {
       descripcion: "Lugar de peregrinación y maravilla arquitectónica.",
       modelo3d: "/assets/modelo3d/religion.glb",
       id: "religion-1"
-    },
-    "GastronomiaZipaquira": {
-      nombre: "Gastronomía local",
-      descripcion: "Sabores tradicionales de la región.",
-      modelo3d: "/assets/modelo3d/gastronomia.glb",
-      id: "gastronomia-1"
     },
     "EstatuaZipaquira": {
       nombre: "Estatua histórica",
