@@ -62,12 +62,6 @@ export class ScanComponent {
       descripcion: "Centro de encuentro y cultura.",
       modelo3d: "/assets/modelo3d/plaza.glb",
       id: "plaza-1"
-    },
-    "20241118_155423773_ios1": {
-      nombre: "Trigger especial",
-      descripcion: "Contenido único escaneado.",
-      modelo3d: "/assets/modelo3d/caciqueReal.glb",
-      id: "especial-1"
     }
   };
 

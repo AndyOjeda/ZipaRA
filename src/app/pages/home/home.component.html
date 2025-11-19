@@ -53,7 +53,7 @@
     </div>
     <div class="trip-cards">
       <div class="trip-card" *ngFor="let h of hoteles" (click)="goToDetail(h.id)">
-        <img [src]="'http://localhost:4000' + h.imagen" [alt]="h.nombre" />
+        <img [src]="'https://backendzipara.onrender.com' + h.imagen" [alt]="h.nombre" />
         <div class="card-info">
           <p class="place-name">{{h.nombre}}</p>
           <p class="price">
@@ -71,7 +71,7 @@
     </div>
     <div class="trip-cards">
       <div class="trip-card" *ngFor="let r of restaurantes" (click)="goToDetail(r.id)">
-        <img [src]="'http://localhost:4000' + r.imagen" [alt]="r.nombre" />
+        <img [src]="'https://backendzipara.onrender.com' + r.imagen" [alt]="r.nombre" />
         <div class="card-info">
           <p class="place-name">{{ r.nombre }}</p>
           <p class="price">
@@ -88,7 +88,7 @@
     <h3>Eventos</h3>
     <div class="trip-cards">
       <div class="trip-card" *ngFor="let e of eventos" (click)="goToDetail(e.id)">
-        <img [src]="'http://localhost:4000' + e.imagen" [alt]="e.nombre" />
+        <img [src]="'https://backendzipara.onrender.com' + e.imagen" [alt]="e.nombre" />
         <div class="card-info">
           <p class="place-name">{{ e.nombre }}</p>
           <p class="price">{{ e.fecha | date:'dd/MM/yyyy' }}</p>
@@ -102,7 +102,7 @@
     <h3>Actividades</h3>
     <div class="trip-cards">
       <div class="trip-card" *ngFor="let a of actividades" (click)="goToDetail(a.id)">
-        <img [src]="'http://localhost:4000' + a.imagen" [alt]="a.nombre" />
+        <img [src]="'https://backendzipara.onrender.com' + a.imagen" [alt]="a.nombre" />
         <div class="card-info">
           <p class="place-name">{{ a.nombre }}</p>
           <p class="price"> {{ a.fecha | date:'dd/MM/yyyy' }}</p>

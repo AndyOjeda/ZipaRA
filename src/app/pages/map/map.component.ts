@@ -92,7 +92,7 @@ export class MapComponent implements OnInit {
 
   /** Normaliza un registro de la API */
   private mapPlace(p: any, tipo?: string) {
-    const baseUrl = 'http://localhost:4000';
+    const baseUrl = 'https://backendzipara.onrender.com';
     return {
       id: p.id,
       tipo: tipo || p.tipo || 'general',

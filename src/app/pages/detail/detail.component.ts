@@ -78,7 +78,7 @@ export class DetailComponent implements OnInit ,AfterViewInit {
               : this.detail.comodidades)
           : {};
         this.detail.description = this.detail.descripcion || "Sin descripción disponible.";
-        this.detail.images = [`http://localhost:4000${this.detail.imagen}`];
+        this.detail.images = [`https://backendzipara.onrender.com${this.detail.imagen}`];
 
         this.detail.googleMapsUrl =
           `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(this.detail.location)}`;

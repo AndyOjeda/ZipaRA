@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://backend-zipa-ra.vercel.app/api" });
+const API = axios.create({ baseURL: "https://backendzipara.onrender.com/api" });
 //const API = axios.create({ baseURL: "http://localhost:4000/api" });
 
 // Helper para enviar con multipart/form-data
