@@ -14,142 +14,102 @@ import { FormsModule } from '@angular/forms';
 })
 export class ScanComponent {
 
-   scanning = false;
-  hotel: any = null;
-  cargando = false;
+  scanning = false;
   currentCamera: 'environment' | 'user' = 'environment';
 
-  @ViewChild('mindarContainer', { static: true }) mindarContainer!: ElementRef;
+  @ViewChild('cameraView', { static: true }) cameraView!: ElementRef;
+  stream: MediaStream | null = null;
 
-  mindarThree: any;
-  anchor: any;
+  // Modal
+  showModal = false;
+  currentModel: any = null;
+
+  currentIndex = 0;
 
   triggerMap: Record<string, any> = {
     "HotelZipaquira": {
       nombre: "Hotel Zipaquirá",
       descripcion: "Hospedaje acogedor en el centro histórico.",
-      modelo3d: "/assets/modelo3d/hotelZipaquira.glb",
-      id: "hotel-1"
+      modelo3d: "/assets/modelo3d/hotelZipaquira.glb"
     },
     "ReligionZipaquira": {
       nombre: "Catedral de Sal",
-      descripcion: "Lugar de peregrinación y maravilla arquitectónica.",
-      modelo3d: "/assets/modelo3d/religion.glb",
-      id: "religion-1"
+      descripcion: "Lugar icónico de Colombia.",
+      modelo3d: "/assets/modelo3d/religion.glb"
     },
     "EstatuaZipaquira": {
       nombre: "Estatua histórica",
       descripcion: "Monumento representativo.",
-      modelo3d: "/assets/modelo3d/estatua.glb",
-      id: "estatua-1"
+      modelo3d: "/assets/modelo3d/estatua.glb"
     },
     "PiedrasZipaquira": {
       nombre: "Formaciones rocosas",
       descripcion: "Piedras ancestrales.",
-      modelo3d: "/assets/modelo3d/piedras.glb",
-      id: "piedras-1"
+      modelo3d: "/assets/modelo3d/piedras.glb"
     },
     "PlazaPrincipal": {
       nombre: "Plaza principal",
-      descripcion: "Centro de encuentro y cultura.",
-      modelo3d: "/assets/modelo3d/plaza.glb",
-      id: "plaza-1"
+      descripcion: "Centro cultural.",
+      modelo3d: "/assets/modelo3d/plaza.glb"
     }
   };
 
-  // ----------------------------------------------
-  // 🚀 INICIAR ESCANEO
-  // ----------------------------------------------
-  async startScan() {
-    if (!(window as any).MINDAR?.IMAGE) {
-      console.error("⚠️ MindAR no cargó todavía");
-      return;
-    }
-
-    this.scanning = true;
-
-    // Destruir instancias previas
-    if (this.mindarThree) {
-      try { await this.mindarThree.stop(); } catch {}
-    }
-
-    // Inicializar motor
-    this.mindarThree = new (window as any).MINDAR.IMAGE.MindARThree({
-      container: this.mindarContainer.nativeElement,
-      imageTargetSrc: "/assets/triggers.mind",
-      uiLoading: "no",
-      uiScanning: "no",
-      uiError: "no",
-      videoSettings: {
-        facingMode: this.currentCamera
-      }
-    });
-
-    const { renderer, scene, camera } = this.mindarThree;
-
-    // Anchor universal
-    this.anchor = this.mindarThree.addAnchor(0);
-
-    // Detectar cuando encuentra un trigger
-    this.anchor.onTargetFound = () => {
-      console.log("🎯 Target detectado");
-      const triggerName = this.getTriggerNameFromIndex(0);
-      this.loadHotelData(triggerName);
-    };
-
-    this.anchor.onTargetLost = () => {
-      console.log("❌ Target perdido");
-    };
-
-    await this.mindarThree.start();
-
-    renderer.setAnimationLoop(() => {
-      renderer.render(scene, camera);
-    });
-  }
-
-  // ------------------------------------------------------------------
-  // 🧠 Mapear índice del .mind → nombre del trigger
-  // ------------------------------------------------------------------
-  getTriggerNameFromIndex(index: number) {
-    const keys = Object.keys(this.triggerMap);
-    return keys[index];
-  }
-
-  // ------------------------------------------------------------------
-  // 📌 Cargar datos del trigger detectado
-  // ------------------------------------------------------------------
-  async loadHotelData(triggerName: string) {
-    this.cargando = true;
-
+  // ▶️ Inicia cámara y modelo
+  async startCamera() {
     try {
-      this.hotel = this.triggerMap[triggerName];
+      this.scanning = true;
+      this.showModal = false;
+
+      if (this.stream) this.stopCamera();
+
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: this.currentCamera }
+      });
+
+      const videoElement = this.cameraView.nativeElement as HTMLVideoElement;
+      videoElement.srcObject = this.stream;
+      videoElement.play();
+
+      // Espera 5s y muestra solo un modelo
+      this.scheduleNextModel();
+
     } catch (err) {
-      console.error("❌ Error cargando:", err);
-    } finally {
-      this.cargando = false;
+      console.error("Error cámara:", err);
     }
   }
 
-  // ------------------------------------------------------------------
-  // 📍 Mandar a mapa
-  // ------------------------------------------------------------------
-  verUbicacion() {
-    if (this.hotel?.id) {
-      window.location.href = `/map/${this.hotel.id}`;
+  scheduleNextModel() {
+    const keys = Object.keys(this.triggerMap);
+    const next = keys[this.currentIndex];
+
+    setTimeout(() => {
+      this.showModel(next);
+      this.currentIndex = (this.currentIndex + 1) % keys.length;
+    }, 5000);
+  }
+
+  stopCamera() {
+    if (this.stream) {
+      this.stream.getTracks().forEach(t => t.stop());
+      this.stream = null;
     }
   }
 
-  // ------------------------------------------------------------------
-  // 🔄 Cambiar Cámara
-  // ------------------------------------------------------------------
-  async swapCamera() {
+  // Muestra el modelo
+  showModel(triggerName: string) {
+    this.currentModel = this.triggerMap[triggerName];
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.scanning = false;   // ← vuelve el botón a "Iniciar escaneo"
+    this.stopCamera();       // ← apaga la cámara
+  }
+
+  // Cambiar cámara
+  swapCamera() {
     this.currentCamera = this.currentCamera === 'environment' ? 'user' : 'environment';
-
-    if (this.mindarThree) {
-      await this.mindarThree.stop();
-    }
-
-    this.startScan();
+    this.startCamera();
   }
 }

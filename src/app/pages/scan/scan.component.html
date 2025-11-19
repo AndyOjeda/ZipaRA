@@ -1,57 +1,47 @@
 <div class="flex flex-col items-center justify-start min-h-screen p-5 bg-gradient-to-br from-gray-900 to-black text-white font-poppins">
   <h2 class="text-2xl font-bold mb-2 text-lime-300">Escanear imagen</h2>
-  <p class="text-sm mb-4 text-gray-400">Apunta la cámara a un trigger (imagen registrada).</p>
+  <p class="text-sm mb-4 text-gray-400">Apunta la cámara al frente.</p>
 
-  <!-- Contenedor MindAR -->
-  <div #mindarContainer id="mindar-container"
-      class="w-80 h-96 border-2 border-dashed border-lime-300 rounded-2xl mb-6 bg-white/5 shadow-lg overflow-hidden relative"
-      style="position: relative;">
+  <!-- Contenedor cámara -->
+  <div class="w-80 h-96 border-2 border-dashed border-lime-300 rounded-2xl mb-6 bg-black/40 shadow-lg overflow-hidden relative">
+    <video #cameraView autoplay playsinline class="w-full h-full object-cover"></video>
   </div>
 
-
-  <!-- Botones de acción -->
+  <!-- Botones -->
   <div class="flex gap-3 mb-6 w-full max-w-xs">
     <button class="flex-1 py-2 rounded-full font-semibold text-black bg-lime-300 hover:bg-lime-200 transition"
-            (click)="startScan()">
+            (click)="startCamera()">
       {{ scanning ? 'Escaneando...' : 'Iniciar escaneo' }}
     </button>
+
     <button class="px-4 py-2 rounded-full font-semibold bg-gray-700 text-white hover:bg-gray-600 transition"
             (click)="swapCamera()">
       🔄 Cámara
     </button>
   </div>
 
-  <!-- Renderiza modelo 3D -->
-  <div *ngIf="!cargando && hotel; else cargandoTpl"
-       class="w-full max-w-lg bg-white/10 rounded-2xl p-5 shadow-lg text-center">
-    <model-viewer
-      src="{{ hotel?.modelo3d }}"
-      alt="Modelo 3D"
-      auto-rotate
-      camera-controls
-      ar
-      shadow-intensity="1"
-      class="w-full h-[450px] rounded-xl overflow-hidden">
-    </model-viewer>
+  <!-- MODAL PERSONALIZADO -->
+  <div *ngIf="showModal"
+       class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
 
-    <div class="mt-3">
-      <h2 class="text-lg font-bold text-white">{{ hotel.nombre }}</h2>
-      <p class="text-sm text-gray-300 mt-1">{{ hotel.descripcion }}</p>
+    <div class="bg-gray-900 rounded-2xl p-5 w-11/12 max-w-md shadow-xl">
+      <h2 class="text-xl font-bold mb-3 text-white">{{ currentModel?.nombre }}</h2>
+
+      <model-viewer
+        src="{{ currentModel?.modelo3d }}"
+        auto-rotate
+        camera-controls
+        class="w-full h-[350px] rounded-xl">
+      </model-viewer>
+
+      <p class="text-gray-300 mt-3">{{ currentModel?.descripcion }}</p>
+
+      <button class="w-full mt-5 py-2 bg-red-600 text-white font-semibold rounded-full"
+              (click)="closeModal()">
+        Cerrar
+      </button>
     </div>
-
-    <button class="mt-4 px-6 py-2 rounded-full font-semibold bg-blue-600 text-white hover:bg-blue-500 transition"
-            (click)="verUbicacion()">
-      📍 Ver ubicación
-    </button>
   </div>
-
-  <!-- Loading -->
-  <ng-template #cargandoTpl>
-    <div class="flex flex-col items-center mt-6">
-      <div class="w-10 h-10 border-4 border-gray-500 border-t-lime-300 rounded-full animate-spin"></div>
-      <p class="mt-3 text-sm text-gray-300">Cargando modelo 3D...</p>
-    </div>
-  </ng-template>
 
   <app-bottom-nav></app-bottom-nav>
 </div>
