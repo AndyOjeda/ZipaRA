@@ -30,27 +30,27 @@ export class ScanComponent {
     "HotelZipaquira": {
       nombre: "Hotel Zipaquirá",
       descripcion: "Hospedaje acogedor en el centro histórico.",
-      modelo3d: "assets/modelo3d/hotelZipaquira.glb"
+      modelo3d: "/assets/modelo3d/hotelZipaquira.glb"
     },
     "ReligionZipaquira": {
       nombre: "Catedral de Sal",
       descripcion: "Lugar icónico de Colombia.",
-      modelo3d: "assets/modelo3d/religion.glb"
+      modelo3d: "/assets/modelo3d/religion.glb"
     },
     "EstatuaZipaquira": {
       nombre: "Estatua histórica",
       descripcion: "Monumento representativo.",
-      modelo3d: "assets/modelo3d/estatua.glb"
+      modelo3d: "/assets/modelo3d/estatua.glb"
     },
     "PiedrasZipaquira": {
       nombre: "Formaciones rocosas",
       descripcion: "Piedras ancestrales.",
-      modelo3d: "assets/modelo3d/piedras.glb"
+      modelo3d: "/assets/modelo3d/piedras.glb"
     },
     "PlazaPrincipal": {
       nombre: "Plaza principal",
       descripcion: "Centro cultural.",
-      modelo3d: "assets/modelo3d/plaza.glb"
+      modelo3d: "/assets/modelo3d/plaza.glb"
     }
   };
 
