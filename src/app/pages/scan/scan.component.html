@@ -27,15 +27,15 @@
     <div class="bg-gray-900 rounded-2xl p-5 w-11/12 max-w-md shadow-xl">
       <h2 class="text-xl font-bold mb-3 text-white">{{ currentModel?.nombre }}</h2>
 
-  <model-viewer
-    [src]="currentModel?.modelo3d"
-    loading="eager"
-    reveal="auto"
-    camera-controls
-    auto-rotate
-    disable-zoom
-    class="w-full h-[350px] rounded-xl">
-  </model-viewer>
+<model-viewer
+  [src]="currentModel?.modelo3d"
+  auto-rotate
+  camera-controls
+  disable-uploads
+  disable-cache
+  class="w-full h-[350px] rounded-xl">
+</model-viewer>
+
 
 
       <p class="text-gray-300 mt-3">{{ currentModel?.descripcion }}</p>
