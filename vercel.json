@@ -1,10 +1,16 @@
 {
   "headers": [
     {
-      "source": "/assets/modelo3d/(.*)",
+      "source": "/assets/modelo3d/(.*)\\.glb",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store" },
-        { "key": "Content-Type", "value": "model/gltf-binary" }
+        {
+          "key": "Content-Type",
+          "value": "model/gltf-binary"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     }
   ]
