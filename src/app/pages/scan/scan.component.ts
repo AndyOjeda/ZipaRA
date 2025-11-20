@@ -1,22 +1,9 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  CUSTOM_ELEMENTS_SCHEMA,
-  AfterViewInit
-} from '@angular/core';
-
+import { Component, ElementRef, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// Three.js
-import * as THREE from 'three';
 
-// Loaders
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 @Component({
   selector: 'app-scan',
@@ -25,7 +12,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   styleUrl: './scan.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ScanComponent implements AfterViewInit {
+export class ScanComponent {
 
   scanning = false;
   currentCamera: 'environment' | 'user' = 'environment';
@@ -33,14 +20,11 @@ export class ScanComponent implements AfterViewInit {
   @ViewChild('cameraView', { static: true }) cameraView!: ElementRef;
   stream: MediaStream | null = null;
 
+  // Modal
   showModal = false;
   currentModel: any = null;
-  currentIndex = 0;
 
-  scene: any;
-  camera: any;
-  renderer: any;
-  controls: any;
+  currentIndex = 0;
 
   triggerMap: Record<string, any> = {
     "HotelZipaquira": {
@@ -70,8 +54,7 @@ export class ScanComponent implements AfterViewInit {
     }
   };
 
-  ngAfterViewInit() {}
-
+  // ▶️ Inicia cámara y modelo
   async startCamera() {
     try {
       this.scanning = true;
@@ -87,6 +70,7 @@ export class ScanComponent implements AfterViewInit {
       videoElement.srcObject = this.stream;
       videoElement.play();
 
+      // Espera 5s y muestra solo un modelo
       this.scheduleNextModel();
 
     } catch (err) {
@@ -111,87 +95,21 @@ export class ScanComponent implements AfterViewInit {
     }
   }
 
+  // Muestra el modelo
   showModel(triggerName: string) {
     this.currentModel = this.triggerMap[triggerName];
     this.showModal = true;
-
-    setTimeout(() => {
-      this.loadModel(this.currentModel.modelo3d);
-    }, 200);
-  }
-
-  loadModel(url: string) {
-    const container = document.getElementById('viewer-container');
-
-    if (!container) {
-      console.error("No existe el contenedor viewer-container");
-      return;
-    }
-
-    container.innerHTML = "";
-
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x000000);
-
-    this.camera = new THREE.PerspectiveCamera(
-      60,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      1000
-    );
-    this.camera.position.set(2, 2, 3);
-
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(this.renderer.domElement);
-
-    // 💡 Luz suave
-    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
-    this.scene.add(light);
-
-    // Controles
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
-    // 📌 GLTF + DRACO
-    const loader = new GLTFLoader();
-
-    const draco = new DRACOLoader();
-    draco.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-    loader.setDRACOLoader(draco);
-
-    loader.load(
-      url,
-      (gltf) => {
-        const model = gltf.scene;
-        model.position.set(0, 0, 0);
-        model.scale.set(1.2, 1.2, 1.2);
-        this.scene.add(model);
-      },
-      undefined,
-      (err) => {
-        console.error("Error cargando GLB:", err);
-      }
-    );
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-      this.controls.update();
-      this.renderer.render(this.scene, this.camera);
-    };
-
-    animate();
   }
 
   closeModal() {
     this.showModal = false;
-    this.scanning = false;
-    this.stopCamera();
+    this.scanning = false;   // ← vuelve el botón a "Iniciar escaneo"
+    this.stopCamera();       // ← apaga la cámara
   }
 
+  // Cambiar cámara
   swapCamera() {
-    this.currentCamera =
-      this.currentCamera === 'environment' ? 'user' : 'environment';
-
+    this.currentCamera = this.currentCamera === 'environment' ? 'user' : 'environment';
     this.startCamera();
   }
 }
