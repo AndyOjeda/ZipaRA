@@ -1,0 +1,10 @@
+{
+  "headers": [
+    {
+      "source": "/assets/modelo3d/(.*).glb",
+      "headers": [
+        { "key": "Content-Type", "value": "model/gltf-binary" }
+      ]
+    }
+  ]
+}
