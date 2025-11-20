@@ -84,7 +84,7 @@ export const createCategorias = (data: any) =>
 
 
 export async function searchAll(query: string) {
-  const res = await fetch(`http://localhost:4000/api/search?q=${encodeURIComponent(query)}`);
+  const res = await fetch(`https://backendzipara.onrender.com/api/search?q=${encodeURIComponent(query)}`);
   if (!res.ok) throw new Error("Error en búsqueda");
   return res.json();
 }
