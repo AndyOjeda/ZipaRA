@@ -1,8 +1,9 @@
 {
   "headers": [
     {
-      "source": "/assets/modelo3d/:path*",
+      "source": "/assets/modelo3d/(.*)",
       "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
         { "key": "Content-Type", "value": "model/gltf-binary" }
       ]
     }
