@@ -20,41 +20,39 @@ export class ScanComponent {
   @ViewChild('cameraView', { static: true }) cameraView!: ElementRef;
   stream: MediaStream | null = null;
 
-  // Modal
   showModal = false;
   currentModel: any = null;
 
   currentIndex = 0;
 
-  triggerMap: Record<string, any> = {
-    "HotelZipaquira": {
+  models = [
+    {
       nombre: "Hotel Zipaquirá",
       descripcion: "Hospedaje acogedor en el centro histórico.",
       modelo3d: "assets/modelo3d/hotelZipaquira.glb"
     },
-    "ReligionZipaquira": {
+    {
       nombre: "Catedral de Sal",
       descripcion: "Lugar icónico de Colombia.",
       modelo3d: "assets/modelo3d/religion.glb"
     },
-    "EstatuaZipaquira": {
+    {
       nombre: "Estatua histórica",
       descripcion: "Monumento representativo.",
       modelo3d: "assets/modelo3d/estatua.glb"
     },
-    "PiedrasZipaquira": {
+    {
       nombre: "Formaciones rocosas",
       descripcion: "Piedras ancestrales.",
       modelo3d: "assets/modelo3d/piedras.glb"
     },
-    "PlazaPrincipal": {
+    {
       nombre: "Plaza principal",
       descripcion: "Centro cultural.",
       modelo3d: "assets/modelo3d/plaza.glb"
     }
-  };
+  ];
 
-  // ▶️ Inicia cámara y modelo
   async startCamera() {
     try {
       this.scanning = true;
@@ -66,11 +64,10 @@ export class ScanComponent {
         video: { facingMode: this.currentCamera }
       });
 
-      const videoElement = this.cameraView.nativeElement as HTMLVideoElement;
-      videoElement.srcObject = this.stream;
-      videoElement.play();
+      const video = this.cameraView.nativeElement as HTMLVideoElement;
+      video.srcObject = this.stream;
+      video.play();
 
-      // Espera 5s y muestra solo un modelo
       this.scheduleNextModel();
 
     } catch (err) {
@@ -79,12 +76,12 @@ export class ScanComponent {
   }
 
   scheduleNextModel() {
-    const keys = Object.keys(this.triggerMap);
-    const next = keys[this.currentIndex];
-
     setTimeout(() => {
-      this.showModel(next);
-      this.currentIndex = (this.currentIndex + 1) % keys.length;
+      this.currentModel = this.models[this.currentIndex];
+      this.showModal = true;
+
+      this.currentIndex = (this.currentIndex + 1) % this.models.length;
+
     }, 5000);
   }
 
@@ -95,19 +92,12 @@ export class ScanComponent {
     }
   }
 
-  // Muestra el modelo
-  showModel(triggerName: string) {
-    this.currentModel = this.triggerMap[triggerName];
-    this.showModal = true;
-  }
-
   closeModal() {
     this.showModal = false;
-    this.scanning = false;   // ← vuelve el botón a "Iniciar escaneo"
-    this.stopCamera();       // ← apaga la cámara
+    this.scanning = false;
+    this.stopCamera();
   }
 
-  // Cambiar cámara
   swapCamera() {
     this.currentCamera = this.currentCamera === 'environment' ? 'user' : 'environment';
     this.startCamera();
