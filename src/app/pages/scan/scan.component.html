@@ -25,25 +25,13 @@
        class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
 
     <div class="bg-gray-900 rounded-2xl p-5 w-11/12 max-w-md shadow-xl">
-      <h2 class="text-xl font-bold mb-3 text-white">{{ currentModel?.nombre }}</h2>
 
-<model-viewer
-  [src]="currentModel?.modelo3d"
-  auto-rotate
-  camera-controls
-  reveal="auto"
-  loading="eager"
-  disable-occlusion
-  disable-variant-updates
-  disable-pan
-  experimental-disable-webgl2
-  experimental-pmrem
-  disable-cache
-  class="w-full h-[350px] rounded-xl">
-</model-viewer>
+      <h2 class="text-xl font-bold mb-3 text-white">
+        {{ currentModel?.nombre }}
+      </h2>
 
-
-
+      <!-- 🔥 CONTENEDOR PARA THREE.JS -->
+      <div id="viewer-container" class="w-full h-[350px] rounded-xl bg-black"></div>
 
       <p class="text-gray-300 mt-3">{{ currentModel?.descripcion }}</p>
 
@@ -51,6 +39,7 @@
               (click)="closeModal()">
         Cerrar
       </button>
+
     </div>
   </div>
 
