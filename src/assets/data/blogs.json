@@ -1,0 +1,99 @@
+[
+  {
+    "id": 1,
+    "titulo": "Descubre la Catedral de Sal de Zipaquirá",
+    "imagen": "assets/img/catedralSal.jpg",
+    "subtitulo": "Historia, arquitectura y una maravilla bajo tierra",
+    "contenido": {
+      "introduccion": "La Catedral de Sal de Zipaquirá es considerada la Primera Maravilla de Colombia. Construida dentro de una mina a 180 metros de profundidad, es un espacio donde convergen historia, espiritualidad, arte y geología.",
+      "secciones": [
+        {
+          "titulo": "Historia y origen de la mina",
+          "texto": "Las minas de sal de Zipaquirá fueron explotadas desde hace más de 2.000 años por los muiscas, quienes usaban la sal como moneda y como elemento sagrado. La primera catedral subterránea se construyó en 1954, pero debido a riesgos estructurales se cerró. La actual fue inaugurada en 1995 y es un ícono turístico mundial."
+        },
+        {
+          "titulo": "Arquitectura y diseño interior",
+          "texto": "La catedral está formada por tres naves: Nacimiento, Vida y Resurrección. Cada una alberga esculturas talladas en roca salina y juegos de luces que resaltan texturas naturales de la mina. Los cruces monumentales y el altar principal son obras maestras que aparentan estar esculpidas en mármol."
+        },
+        {
+          "titulo": "Geología: un tesoro de millones de años",
+          "texto": "El macizo salino de Zipaquirá se originó a partir de un antiguo mar que se evaporó hace unos 250 millones de años. La presión de los Andes compactó estos depósitos hasta formar gigantescas vetas de sal que hoy conforman la catedral."
+        },
+        {
+          "titulo": "Experiencia turística completa",
+          "texto": "Los visitantes recorren 14 estaciones del viacrucis, ingresan al domo salino, observan shows de luces, visitan el Museo de la Salmuera y pueden realizar actividades como muro de escalada, cine 3D, realidad aumentada y compra de artesanías."
+        },
+        {
+          "titulo": "Importancia cultural y espiritual",
+          "texto": "Más allá de un atractivo turístico, la catedral es un símbolo nacional. Cada año recibe peregrinos, viajeros, artistas y fotógrafos que buscan conexión espiritual en un espacio único en el mundo."
+        },
+        {
+          "titulo": "Curiosidades fascinantes",
+          "texto": "La cruz principal mide 16 metros de alto; las lámparas están fabricadas con sal transparente; y existen salas que conservan la humedad exacta para preservar las formaciones salinas."
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "titulo": "Sabores de Zipaquirá: la gastronomía típica",
+    "imagen": "assets/img/platosTipicos.jpeg",
+    "subtitulo": "Platos tradicionales y los mejores restaurantes para disfrutarlos",
+    "contenido": {
+      "introduccion": "La gastronomía zipaquireña reúne tradición muisca, cocina campesina y preparaciones modernas. La sal, el maíz, los tubérculos y las carnes criollas son los protagonistas.",
+      "secciones": [
+        {
+          "titulo": "Platos típicos que debes probar",
+          "texto": "• Ajiaco santafereño\n• Fritanga completa\n• Gallina criolla en fogón de leña\n• Arepa de maíz pelao\n• Caldo de costilla\n• Bandeja campesina\n• Changua\n• Empanadas típicas con ají casero\n• Postres como cuajada con melao, brevas y almojábanas."
+        },
+        {
+          "titulo": "Restaurantes recomendados en Zipaquirá",
+          "texto": "• **Restaurante La Cascada Gourmet** – cocina típica con ambiente familiar.\n• **Pizzeria El Gran Pollo** – tradicional en la ciudad.\n• **Brasas del Llano** – carnes a la llanera.\n• **La Carreta** – gastronomía típica en pleno centro histórico.\n• **Casa del Chorro** – platos colombianos con vista colonial.\n• **Restaurante Cumbia House** – buena música y fusión colombiana."
+        },
+        {
+          "titulo": "Mercado y comida callejera",
+          "texto": "En la plaza de mercado encontrarás amasijos recién horneados, mazorcas asadas, jugos tradicionales y frituras típicas. También hay ventas ambulantes cerca del parque principal con empanadas y obleas."
+        },
+        {
+          "titulo": "Experiencias gastronómicas",
+          "texto": "Puedes realizar tours de comida tradicional, clases de cocina típica o visitas guiadas donde preparas arepas muiscas, degustas miel, sal y productos orgánicos de la región."
+        },
+        {
+          "titulo": "Cultura, sal y tradición",
+          "texto": "La sal no solo forma parte de la historia minera: también es símbolo cultural, presente en recetas, conservas, rituales y sabores heredados de comunidad en comunidad."
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "titulo": "Planes románticos en Zipaquirá",
+    "imagen": "assets/img/planRomantico.jpg",
+    "subtitulo": "Experiencias mágicas para disfrutar en pareja",
+    "contenido": {
+      "introduccion": "Zipaquirá es un destino perfecto para parejas: calles coloniales, buena gastronomía, historia y espacios naturales llenos de tranquilidad.",
+      "secciones": [
+        {
+          "titulo": "La Catedral de Sal: un momento íntimo",
+          "texto": "Recorrer la catedral a la luz tenue, tomarse fotos en sus túneles y compartir la energía espiritual del lugar es un plan único para parejas."
+        },
+        {
+          "titulo": "Cenas románticas",
+          "texto": "Restaurantes como Casa del Chorro, San Giorgio Trattoria o El Chorro resaltan por su iluminación cálida, música suave y platos ideales para compartir."
+        },
+        {
+          "titulo": "Aventura suave en pareja",
+          "texto": "Pueden recorrer senderos ecológicos, visitar el Parque de la Sal, montar en bicicleta o tomar el tren turístico hasta Cajicá o Nemocón."
+        },
+        {
+          "titulo": "Spa y bienestar",
+          "texto": "Hoteles del municipio ofrecen jacuzzis privados, masajes en pareja, salas de relajación y rituales con cristales de sal."
+        },
+        {
+          "titulo": "Atardeceres y paseos nocturnos",
+          "texto": "El centro histórico se ilumina al caer la noche, convirtiéndose en un escenario ideal para caminar, tomar café y disfrutar del ambiente colonial."
+        }
+      ]
+    }
+  }
+]

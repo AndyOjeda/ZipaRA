@@ -9,6 +9,7 @@ import { ScanComponent } from './pages/scan/scan.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { SetupPreferenciesComponent } from './pages/IA/setup-preferencies/setup-preferencies.component';
+import { BlogDetailComponent } from './components/blog-detail/blog-detail.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -20,4 +21,5 @@ export const routes: Routes = [
   { path: 'favorites', component: FavoritesComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'detail/:category/:id', component: DetailComponent },
+  {path: 'blog-detail/:id', component: BlogDetailComponent}
 ];

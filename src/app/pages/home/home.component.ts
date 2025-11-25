@@ -25,6 +25,8 @@ export class HomeComponent implements OnInit {
   eventos: any[] = [];
   actividades: any[] = [];
   selectedCategory: string = 'hoteles';
+  blogs: any[] = [];
+
 
   // 🔍 Búsqueda
   searchResults: any[] = [];
@@ -86,6 +88,12 @@ export class HomeComponent implements OnInit {
     } catch (err) {
       console.error('Error cargando datos:', err);
     }
+
+    // Cargar blogs desde JSON local
+    fetch('assets/data/blogs.json')
+      .then(res => res.json())
+      .then(data => this.blogs = data)
+      .catch(err => console.error("Error cargando blogs:", err));
   }
 
   goToDetail(id: number) {
@@ -124,4 +132,9 @@ export class HomeComponent implements OnInit {
     this.searchResults = []; // limpiar después de seleccionar
     this.searchQuery = "";   // limpiar input
   }
+
+  goToBlog(id: number) {
+  this.router.navigate(['/blog-detail', id]);
+}
+
 }

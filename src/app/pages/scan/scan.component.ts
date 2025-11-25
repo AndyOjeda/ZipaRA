@@ -1,3 +1,4 @@
+
 import { Component, ElementRef, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BottomNavComponent } from "../../components/bottom-nav/bottom-nav.component";
 import { CommonModule } from '@angular/common';
@@ -27,29 +28,39 @@ export class ScanComponent {
 
   models = [
     {
-      nombre: "Hotel Zipaquirá",
+      nombre: "Plaza Zipaquirá",
       descripcion: "Hospedaje acogedor en el centro histórico.",
-      modelo3d: "assets/modelo3d/hotelZipaquira.glb"
+      modelo3d: "assets/modelo3d/plaza.glb"
     },
     {
-      nombre: "Catedral de Sal",
+      nombre: "Piedras de Sevilla",
       descripcion: "Lugar icónico de Colombia.",
-      modelo3d: "assets/modelo3d/religion.glb"
-    },
-    {
-      nombre: "Estatua histórica",
-      descripcion: "Monumento representativo.",
-      modelo3d: "assets/modelo3d/estatua.glb"
-    },
-    {
-      nombre: "Formaciones rocosas",
-      descripcion: "Piedras ancestrales.",
       modelo3d: "assets/modelo3d/piedras.glb"
     },
     {
-      nombre: "Plaza principal",
+      nombre: "Muro de Escalar",
+      descripcion: "Monumento representativo.",
+      modelo3d: "assets/modelo3d/torreEscalar.glb"
+    },
+    {
+      nombre: "Comida Típica",
+      descripcion: "Piedras ancestrales.",
+      modelo3d: "assets/modelo3d/carnePapa.glb"
+    },
+    {
+      nombre: "Hotel Cacique Real",
       descripcion: "Centro cultural.",
       modelo3d: "assets/modelo3d/plaza.glb"
+    },
+        {
+      nombre: "Catedral de Sal",
+      descripcion: "Centro cultural.",
+      modelo3d: "assets/modelo3d/religion.glb"
+    },
+    {
+      nombre: "Estatua",
+      descripcion: "Centro cultural.",
+      modelo3d: "assets/modelo3d/estatua.glb"
     }
   ];
 

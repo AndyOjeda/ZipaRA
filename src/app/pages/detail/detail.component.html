@@ -1,4 +1,5 @@
 <div class="detail-container" *ngIf="detail">
+
   <!-- 🔥 Carousel -->
   <div class="relative h-72 overflow-hidden">
     <img *ngFor="let img of detail.images; let i = index"
@@ -18,6 +19,28 @@
       class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
       <i class="pi pi-heart" [ngClass]="isFavorito ? 'text-red-500' : 'text-gray-400'"></i>
     </button>
+
+    <!-- 🔥 Redes Sociales (debajo del corazón) -->
+    <div class="absolute top-20 right-4 flex flex-col space-y-3">
+
+      <!-- Instagram -->
+      <a *ngIf="detail.instagram"
+        [href]="detail.instagram"
+        target="_blank"
+        class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:scale-105 transition">
+          <i class="pi pi-instagram"></i>
+      </a>
+
+      <!-- Facebook -->
+      <a *ngIf="detail.facebook"
+        [href]="detail.facebook"
+        target="_blank"
+        class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:scale-105 transition">
+          <i class="pi pi-facebook"></i>
+      </a>
+
+    </div>
+
 
     <!-- 🔥 Precio Hoteles arriba a la derecha -->
     <div *ngIf="category === 'hoteles'" 
@@ -135,6 +158,216 @@
       <p class="text-gray-700 leading-relaxed" [innerHTML]="detail.description.replace('.', '.<br><br>')"></p>
     </div>
 
+    <!-- ▶️ BOTONES DE ACCIÓN (Reservar / Ver Menú) -->
+    <div class="mt-6 flex flex-col gap-4">
+
+      <!-- Restaurantes: Reservar + Ver Menú -->
+      <ng-container *ngIf="category === 'restaurantes'">
+        <button
+          class="w-full py-3 rounded-lg bg-white border border-gray-200 text-gray-800 text-lg font-semibold shadow hover:shadow-md transition"
+          (click)="openRestaurantMenu()">
+          Ver menú
+        </button>
+
+        <button
+          class="w-full py-3 rounded-lg bg-[#D7FC39] text-gray text-lg font-semibold shadow hover:bg-green-700 transition"
+          (click)="openRestaurantReserve()">
+          Reservar
+        </button>
+
+        <!-- BOTÓN VER POR PLATO RECOMENDADO (para restaurantes y hoteles) -->
+        <div class="mt-4">
+          <button
+          *ngIf="category === 'restaurantes'"
+          class="w-full py-3 rounded-lg bg-black text-white text-lg font-semibold shadow hover:bg-gray-800 transition"
+          (click)="openPlatoRecomendado()">
+          🍽️ Plato recomendado
+        </button>
+        </div>
+      </ng-container>
+
+      <!-- Hoteles: Reservar -->
+      <ng-container *ngIf="category === 'hoteles'">
+        <button
+          class="w-full py-3 rounded-lg bg-[#D7FC39] text-gray text-lg font-semibold shadow hover:bg-green-700 transition"
+          (click)="openHotelReserve()">
+          Reservar habitación
+        </button>
+
+        <!-- BOTÓN VER POR DENTRO (para restaurantes y hoteles) -->
+        <div class="mt-4">
+        <button
+          *ngIf="category === 'hoteles'"
+          class="w-full py-3 rounded-lg bg-black text-white text-lg font-semibold shadow hover:bg-gray-800 transition"
+          (click)="openHabitacion()">
+          🛏️ Ver habitación
+        </button>
+        </div>
+
+      </ng-container>
+
+    </div>
+
+<!-- ===========================================
+     DIALOG: RESERVAR RESTAURANTE (MODAL)
+     =========================================== -->
+    <div *ngIf="showRestaurantReserve" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" (click)="closeRestaurantReserve()"></div>
+
+      <div class="relative w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="px-6 py-4 border-b">
+          <h3 class="text-lg font-semibold">Reservar en {{ detail.name }}</h3>
+          <p class="text-sm text-gray-500 mt-1">Elige fecha y número de personas</p>
+        </div>
+
+        <form class="px-6 py-4 space-y-4" (submit)="submitRestaurantReserve($event)">
+          <div>
+            <label class="text-sm font-medium text-gray-700">Fecha</label>
+            <input type="date" [(ngModel)]="restaurantReserve.date" name="rdate"
+                  class="mt-2 w-full border rounded-lg px-3 py-2" required>
+          </div>
+
+          <div>
+            <label class="text-sm font-medium text-gray-700">Hora</label>
+            <input type="time" [(ngModel)]="restaurantReserve.time" name="rtime"
+                  class="mt-2 w-full border rounded-lg px-3 py-2" required>
+          </div>
+
+          <div>
+            <label class="text-sm font-medium text-gray-700">Personas</label>
+            <input type="number" min="1" [(ngModel)]="restaurantReserve.people" name="rpeople"
+                  class="mt-2 w-full border rounded-lg px-3 py-2" required>
+          </div>
+
+          <div class="flex gap-3 mt-2">
+            <button type="submit" class="flex-1 py-3 rounded-lg bg-[#D7FC39] text-gray font-semibold">
+              Reservar
+            </button>
+            <button type="button" (click)="closeRestaurantReserve()" class="flex-1 py-3 rounded-lg bg-gray-100">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+<!-- ===========================================
+     DIALOG: MENÚ RESTAURANTE (ESTILO AMPLIO)
+=========================================== -->
+  <div *ngIf="showRestaurantMenu" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" (click)="closeRestaurantMenu()"></div>
+
+    <div class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-6 overflow-auto max-h-[85vh]">
+
+      <!-- Cerrar -->
+      <button 
+        class="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+        (click)="closeRestaurantMenu()">
+        ✕
+      </button>
+
+      <!-- Card con fecha -->
+      <div class="mx-auto mt-6 mb-8 bg-gray-50 rounded-2xl shadow p-5 w-52 text-center w-[300px]">
+        <p class="text-2xl font-semibold text-gray-900">{{ detail.name }}</p>
+        <p class="text-xs text-gray-500 mt-2">
+          Menú actualizado:<br>
+          {{ detail.menuUpdated || (today | date:'dd/MM/yyyy') }}
+        </p>
+      </div>
+
+      <!-- Carta -->
+      <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Carta</h3>
+
+      <div class="grid grid-cols-2 gap-x-10 gap-y-10 px-2">
+
+        <ng-container *ngFor="let section of detail.menuSections">
+          
+          <!-- Título de la sección -->
+          <div class="col-span-2">
+            <h4 class="font-semibold text-gray-800 text-lg">{{ section.name }}</h4>
+            <p class="text-sm text-gray-500 mt-1">{{ section.description }}</p>
+          </div>
+
+          <!-- Items -->
+          <div *ngFor="let item of section.items" class="flex flex-col">
+
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-medium text-gray-900 leading-tight">{{ item.name }}</p>
+                <p class="text-xs text-gray-500 mt-1 leading-snug">{{ item.description }}</p>
+              </div>
+
+              <div class="text-sm font-semibold text-green-600 ml-3">
+                {{ item.price | currency:'USD':'symbol':'1.0-0':'en-US' }}
+              </div>
+            </div>
+
+            <div class="border-b border-gray-300 mt-3"></div>
+
+          </div>
+
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+<!-- ===========================================
+     DIALOG: RESERVAR HOTEL
+     =========================================== -->
+<div *ngIf="showHotelReserve" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" (click)="closeHotelReserve()"></div>
+
+  <div class="relative w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div class="px-6 py-4 border-b">
+      <h3 class="text-lg font-semibold">Reservar habitación en {{ detail.name }}</h3>
+      <p class="text-sm text-gray-500 mt-1">Selecciona fechas y necesidades</p>
+    </div>
+
+    <form class="px-6 py-4 space-y-4" (submit)="submitHotelReserve($event)">
+      <div>
+        <label class="text-sm font-medium text-gray-700">Llegada</label>
+        <input type="date" [(ngModel)]="hotelReserve.checkin" name="checkin"
+               class="mt-2 w-full border rounded-lg px-3 py-2" required>
+      </div>
+
+      <div>
+        <label class="text-sm font-medium text-gray-700">Salida</label>
+        <input type="date" [(ngModel)]="hotelReserve.checkout" name="checkout"
+               class="mt-2 w-full border rounded-lg px-3 py-2" required>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-sm font-medium text-gray-700">Miembros</label>
+          <input type="number" min="1" [(ngModel)]="hotelReserve.members" name="members"
+                 class="mt-2 w-full border rounded-lg px-3 py-2" required>
+        </div>
+        <div>
+          <label class="text-sm font-medium text-gray-700">Camas</label>
+          <select [(ngModel)]="hotelReserve.beds" name="beds" class="mt-2 w-full border rounded-lg px-3 py-2">
+            <option value="1">1 cama</option>
+            <option value="2">2 camas</option>
+            <option value="3">3 camas</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-2">
+        <button type="submit" class="flex-1 py-3 rounded-lg bg-green-600 text-white font-semibold">
+          Reservar
+        </button>
+        <button type="button" (click)="closeHotelReserve()" class="flex-1 py-3 rounded-lg bg-gray-100">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
     <!-- 🔥 Mapa dinámico -->
     <div class="map mt-6">
@@ -147,5 +380,137 @@
     </div>
   </div>
 </div>
+
+    <!-- ===========================================
+      ALERTA GLOBAL (éxito / error / info)
+    =========================================== -->
+    <div 
+      *ngIf="alert.show"
+      class="fixed inset-0 flex items-center justify-center z-[9999]">
+
+      <!-- Fondo oscuro -->
+      <div 
+        class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        (click)="closeAlert()">
+      </div>
+
+      <!-- Caja alerta -->
+      <div
+        class="relative bg-white w-[85%] max-w-sm rounded-2xl shadow-xl p-6 text-center animate-fadeScale">
+
+        <!-- Icono dinámico -->
+        <div class="text-4xl mb-3"
+            [ngClass]="{
+              'text-green-600': alert.type === 'success',
+              'text-red-600': alert.type === 'error',
+              'text-blue-600': alert.type === 'info'
+            }">
+          <i class="pi"
+            [ngClass]="{
+              'pi-check-circle': alert.type === 'success',
+              'pi-times-circle': alert.type === 'error',
+              'pi-info-circle': alert.type === 'info'
+            }">
+          </i>
+        </div>
+
+        <!-- Título -->
+        <h3 class="text-xl font-semibold mb-2">
+          {{ alert.title }}
+        </h3>
+
+        <!-- Mensaje -->
+        <p class="text-gray-600 text-sm mb-5">
+          {{ alert.message }}
+        </p>
+
+        <!-- Botón -->
+        <button 
+          class="w-full py-2 rounded-lg bg-black text-white font-semibold hover:bg-gray-800 transition"
+          (click)="closeAlert()">
+          Cerrar
+        </button>
+
+      </div>
+    </div>
+
+
+  <div *ngIf="showPlato" class="fixed inset-0 z-50 flex items-center justify-center p-6">
+    <!-- FONDO OSCURO CON BLUR -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-xl" (click)="closePlato()"></div>
+
+    <!-- CARD MODERNO GLASS -->
+    <div class="relative w-full max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-3xl p-6 animate-fadeIn">
+
+      <!-- TÍTULO -->
+      <h3 class="text-2xl font-bold text-white mb-4 tracking-wide drop-shadow">
+        {{ platoActivo.nombre }}
+      </h3>
+
+      <!-- CONTENEDOR 3D (puedes poner aquí tu <model-viewer>) -->
+      <div class="w-full h-72 rounded-2xl overflow-hidden border border-white/30 bg-black/40 shadow-inner neon-border mb-4 flex items-center justify-center">
+        <!-- Aquí va tu GLB -->
+        <model-viewer
+          [src]="platoActivo.img"
+          camera-controls
+          auto-rotate
+          disable-tap
+          class="w-full h-full">
+        </model-viewer>
+      </div>
+
+      <!-- DESCRIPCIÓN -->
+      <p class="text-gray-200/90 text-sm leading-relaxed mb-6">
+        {{ platoActivo.desc }}
+      </p>
+
+      <!-- BOTÓN CERRAR -->
+      <button
+      (click)="closePlato()"
+        class="w-full py-3 rounded-xl bg-white/20 text-white font-semibold backdrop-blur hover:bg-white/30 transition shadow-lg hover:shadow-xl">
+        Cerrar
+      </button>
+
+    </div>
+  </div>
+
+
+<div *ngIf="showHabitacion" class="fixed inset-0 z-50 flex items-center justify-center p-6">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-xl" (click)="closeHabitacion()"></div>
+
+  <div class="relative w-full max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-3xl p-6 animate-fadeIn">
+
+    <h3 class="text-2xl font-bold text-white mb-4 tracking-wide drop-shadow">
+      {{ habitacionActiva.nombre }}
+    </h3>
+
+    <!-- CONTENEDOR 3D -->
+    <div class="w-full h-72 rounded-2xl overflow-hidden border border-white/30 bg-black/40 shadow-inner neon-border mb-4 flex items-center justify-center">
+      <model-viewer
+        [src]="habitacionActiva?.img"
+        auto-rotate
+        camera-controls
+        shadow-intensity="1"
+        style="width:100%; height:100%; border-radius: 12px;">
+      </model-viewer>
+    </div>
+
+    <p class="text-gray-200/90 text-sm leading-relaxed mb-1">
+      {{ habitacionActiva.desc }}
+    </p>
+
+    <p class="text-lg font-semibold text-white mb-6 drop-shadow">
+      💰 ${{ habitacionActiva.precio | number }}
+    </p>
+
+    <button
+    (click)="closeHabitacion()"
+      class="w-full py-3 rounded-xl bg-white/20 text-white font-semibold backdrop-blur hover:bg-white/30 transition shadow-lg hover:shadow-xl">
+      Cerrar
+    </button>
+
+  </div>
+</div>
+    
 
 <app-bottom-nav></app-bottom-nav>
