@@ -34,14 +34,10 @@ export class ScanComponent {
       usdz: "assets/modelo3d/plaza.usdz"
     },
     {
-      nombre: "Muro de Escalar",
-      descripcion: "Muro de Escalar es un espacio diseñado para la aventura y la adrenalina. Ofrece rutas para todos los niveles, desde principiantes hasta escaladores experimentados, en un ambiente seguro y divertido. Perfecto para disfrutar una experiencia deportiva diferente en la ciudad.",
-      modelo3d: "assets/modelo3d/torreEscalar.glb"
-    },
-    {
       nombre: "Comida Típica",
       descripcion: "Comida Típica (Carne y Papas) combina sabores tradicionales de la región con preparaciones caseras. Carnes jugosas acompañadas de papas criollas o sabaneras resaltan la esencia gastronómica andina. Un plato sencillo pero lleno de sabor local, ideal para disfrutar la auténtica cocina zipaquireña.",
-      modelo3d: "assets/modelo3d/CarnePapa.glb"
+      modelo3d: "assets/modelo3d/CarnePapa.glb",
+      usdz: "assets/modelo3d/CarnePapa1.usdz"
     },
     {
       nombre: "Hotel Cacique Real",
