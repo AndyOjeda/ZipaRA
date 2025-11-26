@@ -635,5 +635,10 @@ closeHabitacion() {
   this.showHabitacion = false;
 }
 
+openOnirix(url: string) {
+  window.open(url, "_blank");
+}
+
+
 
 }

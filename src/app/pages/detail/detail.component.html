@@ -435,98 +435,116 @@
     </div>
 
 
-  <div *ngIf="showPlato" class="fixed inset-0 z-50 flex items-center justify-center p-6">
-    <!-- FONDO OSCURO CON BLUR -->
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-xl" (click)="closePlato()"></div>
+    <div *ngIf="showPlato" class="fixed inset-0 z-50 flex items-center justify-center p-6">
+        <!-- FONDO OSCURO CON BLUR -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-xl" (click)="closePlato()"></div>
 
-    <!-- CARD MODERNO GLASS -->
-    <div class="relative w-full max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-3xl p-6 animate-fadeIn">
+        <!-- CARD MODERNO GLASS -->
+        <div class="relative w-full max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-3xl p-6 animate-fadeIn">
 
-      <!-- TÍTULO -->
-      <h3 class="text-2xl font-bold text-white mb-4 tracking-wide drop-shadow">
-        {{ platoActivo.nombre }}
-      </h3>
+          <!-- TÍTULO -->
+          <h3 class="text-2xl font-bold text-white mb-4 tracking-wide drop-shadow">
+            {{ platoActivo.nombre }}
+          </h3>
 
-      <!-- CONTENEDOR 3D (puedes poner aquí tu <model-viewer>) -->
-      <div class="w-full h-72 rounded-2xl overflow-hidden bg-black/40 border border-white/30 shadow-inner neon-border mb-4 flex items-center justify-center">
-      <model-viewer
-        [src]="platoActivo.img"
-        [ios-src]="platoActivo.usdz"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        auto-rotate
-        shadow-intensity="1"
-        class="w-full h-full relative z-[9999]"
-      >
-        <button slot="ar-button"
-          class="px-3 py-2 bg-white text-black rounded-lg shadow font-semibold text-sm z-[999999] relative">
-          Ver en AR
-        </button>
-      </model-viewer>
+          <!-- CONTENEDOR 3D -->
+          <div class="w-full h-72 rounded-2xl overflow-hidden bg-black/40 border border-white/30 shadow-inner neon-border mb-4 flex items-center justify-center">
+            <model-viewer
+              [src]="platoActivo.img"
+              [ios-src]="platoActivo.usdz"
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              camera-controls
+              auto-rotate
+              shadow-intensity="1"
+              class="w-full h-full relative z-[9999]"
+            >
+              <button
+                slot="ar-button"
+                class="px-3 py-2 bg-white text-black rounded-lg shadow font-semibold text-sm z-[999999] relative">
+                Ver en AR
+              </button>
+            </model-viewer>
+          </div>
+
+          <!-- DESCRIPCIÓN -->
+          <p class="text-gray-200/90 text-sm leading-relaxed mb-6">
+            {{ platoActivo.desc }}
+          </p>
+
+          <!-- BOTONES -->
+          <div class="grid grid-cols-2 gap-3">
+            <button
+              (click)="closePlato()"
+              class="w-full py-3 rounded-xl bg-white/20 text-white font-semibold backdrop-blur hover:bg-white/30 transition shadow-lg">
+              Cerrar
+            </button>
+
+            <button
+              (click)="openOnirix(platoActivo.onirix)"
+              class="w-full py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition shadow-xl">
+              Ver en RV
+            </button>
+          </div>
+
+        </div>
     </div>
 
 
-      <!-- DESCRIPCIÓN -->
-      <p class="text-gray-200/90 text-sm leading-relaxed mb-6">
-        {{ platoActivo.desc }}
-      </p>
+    <!-- HABITACIONES -->
+    <div *ngIf="showHabitacion" class="fixed inset-0 z-50 flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-xl" (click)="closeHabitacion()"></div>
 
-      <!-- BOTÓN CERRAR -->
-      <button
-      (click)="closePlato()"
-        class="w-full py-3 rounded-xl bg-white/20 text-white font-semibold backdrop-blur hover:bg-white/30 transition shadow-lg hover:shadow-xl">
-        Cerrar
-      </button>
+      <div class="relative w-full max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-3xl p-6 animate-fadeIn">
 
+        <h3 class="text-2xl font-bold text-white mb-4 tracking-wide drop-shadow">
+          {{ habitacionActiva.nombre }}
+        </h3>
+
+        <!-- CONTENEDOR 3D -->
+        <div class="w-full h-72 rounded-2xl overflow-hidden border border-white/30 bg-black/40 shadow-inner neon-border mb-4 flex items-center justify-center">
+          <model-viewer
+            [src]="habitacionActiva?.img"
+            [ios-src]="habitacionActiva?.usdz"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            auto-rotate
+            shadow-intensity="1"
+            style="width:100%; height:100%; border-radius: 12px;">
+
+            <button slot="ar-button" class="px-3 py-2 bg-white rounded-lg shadow text-sm">
+              Ver en AR
+            </button>
+          </model-viewer>
+        </div>
+
+        <p class="text-gray-200/90 text-sm leading-relaxed mb-1">
+          {{ habitacionActiva.desc }}
+        </p>
+
+        <p class="text-lg font-semibold text-white mb-6 drop-shadow">
+          💰 ${{ habitacionActiva.precio | number }}
+        </p>
+
+        <!-- BOTONES -->
+        <div class="grid grid-cols-2 gap-3">
+          <button
+            (click)="closeHabitacion()"
+            class="w-full py-3 rounded-xl bg-white/20 text-white font-semibold backdrop-blur hover:bg-white/30 transition shadow-lg">
+            Cerrar
+          </button>
+
+          <button
+            (click)="openOnirix(habitacionActiva.onirix)"
+            class="w-full py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition shadow-xl">
+            Ver en RV
+          </button>
+        </div>
+
+      </div>
     </div>
-  </div>
 
-
-<div *ngIf="showHabitacion" class="fixed inset-0 z-50 flex items-center justify-center p-6">
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-xl" (click)="closeHabitacion()"></div>
-
-  <div class="relative w-full max-w-lg bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-3xl p-6 animate-fadeIn">
-
-    <h3 class="text-2xl font-bold text-white mb-4 tracking-wide drop-shadow">
-      {{ habitacionActiva.nombre }}
-    </h3>
-
-    <!-- CONTENEDOR 3D -->
-    <div class="w-full h-72 rounded-2xl overflow-hidden border border-white/30 bg-black/40 shadow-inner neon-border mb-4 flex items-center justify-center">
-      <model-viewer
-        [src]="habitacionActiva?.img"
-        [ios-src]="habitacionActiva?.usdz"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        auto-rotate
-        shadow-intensity="1"
-        style="width:100%; height:100%; border-radius: 12px;">
-
-        <button slot="ar-button" class="px-3 py-2 bg-white rounded-lg shadow text-sm">
-          Ver en AR
-        </button>
-      </model-viewer>
-
-    </div>
-
-    <p class="text-gray-200/90 text-sm leading-relaxed mb-1">
-      {{ habitacionActiva.desc }}
-    </p>
-
-    <p class="text-lg font-semibold text-white mb-6 drop-shadow">
-      💰 ${{ habitacionActiva.precio | number }}
-    </p>
-
-    <button
-    (click)="closeHabitacion()"
-      class="w-full py-3 rounded-xl bg-white/20 text-white font-semibold backdrop-blur hover:bg-white/30 transition shadow-lg hover:shadow-xl">
-      Cerrar
-    </button>
-
-  </div>
-</div>
     
 
 <app-bottom-nav></app-bottom-nav>

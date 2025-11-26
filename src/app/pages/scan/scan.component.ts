@@ -33,11 +33,6 @@ export class ScanComponent {
       modelo3d: "assets/modelo3d/plaza.glb"
     },
     {
-      nombre: "Piedras de Sevilla",
-      descripcion: "Es un hermoso paraje natural rodeado de formaciones rocosas únicas y vegetación nativa. Es un lugar tranquilo ideal para caminar, explorar senderos y disfrutar de vistas panorámicas que conectan con la naturaleza y la historia rural de la región.",
-      modelo3d: "assets/modelo3d/sevilla.glb"
-    },
-    {
       nombre: "Muro de Escalar",
       descripcion: "Muro de Escalar es un espacio diseñado para la aventura y la adrenalina. Ofrece rutas para todos los niveles, desde principiantes hasta escaladores experimentados, en un ambiente seguro y divertido. Perfecto para disfrutar una experiencia deportiva diferente en la ciudad.",
       modelo3d: "assets/modelo3d/torreEscalar.glb"
