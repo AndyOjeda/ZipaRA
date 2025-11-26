@@ -30,7 +30,8 @@ export class ScanComponent {
     {
       nombre: "Plaza Zipaquirá",
       descripcion: "La Plaza Principal de Zipaquirá es un punto lleno de historia y encanto colonial. Rodeada de cafés, arquitectura patrimonial y un ambiente vibrante, es el lugar perfecto para iniciar tu recorrido por la ciudad y disfrutar de su esencia cultural.",
-      modelo3d: "assets/modelo3d/plaza.glb"
+      modelo3d: "assets/modelo3d/plaza.glb",
+      usdz: "assets/modelo3d/plaza.usdz"
     },
     {
       nombre: "Muro de Escalar",
