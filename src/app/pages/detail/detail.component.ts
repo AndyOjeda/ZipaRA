@@ -74,31 +74,37 @@ platosRecomendados: any = {
   1: {
     nombre: 'Cerveza 𝑺𝒕𝒐𝒖𝒕',
     img: 'assets/modelo3d/pie.glb',
+    usdz: 'assets/modelo3d/pie.usdz',
     desc: 'Es el nombre de un estilo de cerveza, tipo ale, muy oscura, originario de las islas británicas, 𝑺𝒕𝒐𝒖𝒕, es el nombre utilizado para la cerveza más fuerte fabricada con secas maltas tostadas y con notas de café achocolatadas.'
   },
   2: {
     nombre: 'Costilla Braseada en Reducción Oscura con Papas Rústicas y Brotes Frescos',
     img: 'assets/modelo3d/salario.glb',
+    usdz: 'assets/modelo3d/salario.usdz',
     desc: 'Costilla de cerdo braseada lentamente hasta obtener una textura tierna y jugosa, bañada en una reducción oscura con notas dulces y ahumadas. Se sirve sobre papas rústicas doradas y chorizo caramelizado, que aportan profundidad y contraste. Finalizado con brotes frescos y un toque floral que realza la presentación y añade frescura al paladar.'
   },
   3: {
     nombre: 'Costillas Glaseadas en Salsa Agridulce con Ensalada Cremosa de Papas',
     img: 'assets/modelo3d/labriego.glb',
+    usdz: 'assets/modelo3d/labriego.usdz',
     desc: 'Deliciosas costillas de cerdo cocinadas a fuego lento hasta quedar suaves y jugosas, bañadas en una salsa agridulce brillante con notas caramelizadas. Se coronan con tomates cherry amarillos que aportan frescura y un toque cítrico. Acompañan unas papas rústicas mezcladas con una crema suave de hierbas y tiras de cebolla, creando un balance perfecto entre lo dulce, lo salado y lo cremoso.'
   },
   4: {
     nombre: 'Raviolis Quesudos',
     img: 'assets/modelo3d/grana.glb',
+    usdz: 'assets/modelo3d/grana.usdz',
     desc: 'Raviolis hechos a mano, rellenos de queso de cabra: suaves, cremosos, inolvidables. Una salsa de tomates rostizados con un toque de siracha que equilibra dulzura, acidez y ese picante que despierta sentidos. La trucha, curada y ahumada desde nuestras montañas, une dos mundos en un solo plato.'
   },
   5: {
     nombre: 'Postre Matrimonio',
     img: 'assets/modelo3d/matrimonio.glb',
+    usdz: 'assets/modelo3d/matrimonio.usdz',
     desc: 'La combinación perfecta de arequipe, cuajada y salsa de mora en un solo postre. Un amor eterno entre dulzura y tradición. '
   },
   6: {
     nombre: 'Mojarra Frita Tradicional con Arroz con Coco y Patacón Dorado',
     img: 'assets/modelo3d/mar.glb',
+    usdz: 'assets/modelo3d/mar.usdz',
     desc: 'Mojarra entera frita a la perfección, con piel crujiente y carne jugosa, acompañada de un aromático arroz con coco que aporta dulzura y suavidad. Incluye patacón dorado y crujiente, una fresca ensalada de verduras y un toque de limón para realzar los sabores. Un clásico de la cocina caribeña y colombiana preparado en su esencia más auténtica.'
   }
 };

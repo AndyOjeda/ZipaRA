@@ -5,3 +5,8 @@ body {
   padding: 0;
   background-color: #ffffff; /* o el color que prefieras */
 }
+
+model-viewer::part(ar-button) {
+  z-index: 999999 !important;
+  position: relative !important;
+}

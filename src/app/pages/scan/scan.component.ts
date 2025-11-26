@@ -29,37 +29,37 @@ export class ScanComponent {
   models = [
     {
       nombre: "Plaza Zipaquirá",
-      descripcion: "Hospedaje acogedor en el centro histórico.",
+      descripcion: "La Plaza Principal de Zipaquirá es un punto lleno de historia y encanto colonial. Rodeada de cafés, arquitectura patrimonial y un ambiente vibrante, es el lugar perfecto para iniciar tu recorrido por la ciudad y disfrutar de su esencia cultural.",
       modelo3d: "assets/modelo3d/plaza.glb"
     },
     {
       nombre: "Piedras de Sevilla",
-      descripcion: "Lugar icónico de Colombia.",
-      modelo3d: "assets/modelo3d/piedras.glb"
+      descripcion: "Es un hermoso paraje natural rodeado de formaciones rocosas únicas y vegetación nativa. Es un lugar tranquilo ideal para caminar, explorar senderos y disfrutar de vistas panorámicas que conectan con la naturaleza y la historia rural de la región.",
+      modelo3d: "assets/modelo3d/sevilla.glb"
     },
     {
       nombre: "Muro de Escalar",
-      descripcion: "Monumento representativo.",
+      descripcion: "Muro de Escalar es un espacio diseñado para la aventura y la adrenalina. Ofrece rutas para todos los niveles, desde principiantes hasta escaladores experimentados, en un ambiente seguro y divertido. Perfecto para disfrutar una experiencia deportiva diferente en la ciudad.",
       modelo3d: "assets/modelo3d/torreEscalar.glb"
     },
     {
       nombre: "Comida Típica",
-      descripcion: "Piedras ancestrales.",
-      modelo3d: "assets/modelo3d/carnePapa.glb"
+      descripcion: "Comida Típica (Carne y Papas) combina sabores tradicionales de la región con preparaciones caseras. Carnes jugosas acompañadas de papas criollas o sabaneras resaltan la esencia gastronómica andina. Un plato sencillo pero lleno de sabor local, ideal para disfrutar la auténtica cocina zipaquireña.",
+      modelo3d: "assets/modelo3d/CarnePapa.glb"
     },
     {
       nombre: "Hotel Cacique Real",
-      descripcion: "Centro cultural.",
-      modelo3d: "assets/modelo3d/plaza.glb"
+      descripcion: "Hotel Cacique Real ofrece una estadía cómoda y acogedora en el corazón de Zipaquirá. Con habitaciones modernas, atención amable y una ubicación cercana a los principales atractivos turísticos, es una opción ideal para descansar y disfrutar de la ciudad.",
+      modelo3d: "assets/modelo3d/hotelZipaquira.glb"
     },
         {
       nombre: "Catedral de Sal",
-      descripcion: "Centro cultural.",
+      descripcion: "Catedral de Sal es uno de los templos subterráneos más impresionantes del mundo. Construida dentro de una mina de sal, ofrece un recorrido único lleno de arte, iluminación y espiritualidad a 180 metros bajo tierra. Un destino imperdible en Zipaquirá.",
       modelo3d: "assets/modelo3d/religion.glb"
     },
     {
-      nombre: "Estatua",
-      descripcion: "Centro cultural.",
+      nombre: "Estatua Zipaquirá",
+      descripcion: "Estatua de Zipaquirá es un monumento emblemático que rinde homenaje a la identidad y la historia del municipio. Ubicada en un punto destacado de la ciudad, es un lugar ideal para tomar fotos y apreciar el legado cultural zipaquireño.",
       modelo3d: "assets/modelo3d/estatua.glb"
     }
   ];

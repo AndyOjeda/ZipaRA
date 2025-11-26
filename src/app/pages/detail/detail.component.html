@@ -448,16 +448,24 @@
       </h3>
 
       <!-- CONTENEDOR 3D (puedes poner aquí tu <model-viewer>) -->
-      <div class="w-full h-72 rounded-2xl overflow-hidden border border-white/30 bg-black/40 shadow-inner neon-border mb-4 flex items-center justify-center">
-        <!-- Aquí va tu GLB -->
-        <model-viewer
-          [src]="platoActivo.img"
-          camera-controls
-          auto-rotate
-          disable-tap
-          class="w-full h-full">
-        </model-viewer>
-      </div>
+      <div class="w-full h-72 rounded-2xl overflow-hidden bg-black/40 border border-white/30 shadow-inner neon-border mb-4 flex items-center justify-center">
+      <model-viewer
+        [src]="platoActivo.img"
+        [ios-src]="platoActivo.usdz"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1"
+        class="w-full h-full relative z-[9999]"
+      >
+        <button slot="ar-button"
+          class="px-3 py-2 bg-white text-black rounded-lg shadow font-semibold text-sm z-[999999] relative">
+          Ver en AR
+        </button>
+      </model-viewer>
+    </div>
+
 
       <!-- DESCRIPCIÓN -->
       <p class="text-gray-200/90 text-sm leading-relaxed mb-6">
@@ -488,11 +496,19 @@
     <div class="w-full h-72 rounded-2xl overflow-hidden border border-white/30 bg-black/40 shadow-inner neon-border mb-4 flex items-center justify-center">
       <model-viewer
         [src]="habitacionActiva?.img"
-        auto-rotate
+        [ios-src]="habitacionActiva?.usdz"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
         camera-controls
+        auto-rotate
         shadow-intensity="1"
         style="width:100%; height:100%; border-radius: 12px;">
+
+        <button slot="ar-button" class="px-3 py-2 bg-white rounded-lg shadow text-sm">
+          Ver en AR
+        </button>
       </model-viewer>
+
     </div>
 
     <p class="text-gray-200/90 text-sm leading-relaxed mb-1">
