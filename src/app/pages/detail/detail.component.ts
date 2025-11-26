@@ -75,12 +75,14 @@ platosRecomendados: any = {
     nombre: 'Cerveza 𝑺𝒕𝒐𝒖𝒕',
     img: 'assets/modelo3d/pie.glb',
     usdz: 'assets/modelo3d/pie.usdz',
+    onirix: 'https://player.onirix.com/exp/LYDrjO',
     desc: 'Es el nombre de un estilo de cerveza, tipo ale, muy oscura, originario de las islas británicas, 𝑺𝒕𝒐𝒖𝒕, es el nombre utilizado para la cerveza más fuerte fabricada con secas maltas tostadas y con notas de café achocolatadas.'
   },
   2: {
     nombre: 'Costilla Braseada en Reducción Oscura con Papas Rústicas y Brotes Frescos',
     img: 'assets/modelo3d/salario.glb',
     usdz: 'assets/modelo3d/salario.usdz',
+    onirix: 'https://player.onirix.com/exp/3Ax4O9',
     desc: 'Costilla de cerdo braseada lentamente hasta obtener una textura tierna y jugosa, bañada en una reducción oscura con notas dulces y ahumadas. Se sirve sobre papas rústicas doradas y chorizo caramelizado, que aportan profundidad y contraste. Finalizado con brotes frescos y un toque floral que realza la presentación y añade frescura al paladar.'
   },
   3: {
@@ -105,6 +107,7 @@ platosRecomendados: any = {
     nombre: 'Mojarra Frita Tradicional con Arroz con Coco y Patacón Dorado',
     img: 'assets/modelo3d/mar.glb',
     usdz: 'assets/modelo3d/mar.usdz',
+    onirix: 'https://player.onirix.com/exp/lnMQp6',
     desc: 'Mojarra entera frita a la perfección, con piel crujiente y carne jugosa, acompañada de un aromático arroz con coco que aporta dulzura y suavidad. Incluye patacón dorado y crujiente, una fresca ensalada de verduras y un toque de limón para realzar los sabores. Un clásico de la cocina caribeña y colombiana preparado en su esencia más auténtica.'
   }
 };
@@ -114,48 +117,56 @@ habitacionesDestacadas: any = {
   4: {
     nombre: 'Suite Deluxe',
     img: 'assets/modelo3d/habCaminoSal.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 180000,
     desc: 'Habitación amplia, elegante y con vista a la ciudad.'
   },
   5: {
     nombre: 'Habitación Doble',
     img: 'assets/modelo3d/habBacata.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 140000,
     desc: 'Perfecta para parejas o dos viajeros.'
   },
   6: {
     nombre: 'Habitación Ejecutiva',
     img: 'assets/modelo3d/habCacique1.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 220000,
     desc: 'Pensada para viajeros corporativos con todas las comodidades.'
   },
   7: {
     nombre: 'Habitación Familiar',
     img: 'assets/modelo3d/habBoutique.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 160000,
     desc: 'Espacio ideal para familias de hasta 5 personas.'
   },
   8: {
     nombre: 'Habitación Estándar',
     img: 'assets/modelo3d/habSalinero.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 110000,
     desc: 'Cómoda, sencilla y económica.'
   },
   9: {
     nombre: 'Suite Romántica',
     img: 'assets/modelo3d/habLuxury.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 200000,
     desc: 'Decoración especial para parejas.'
   },
   10: {
     nombre: 'Habitación Premium',
     img: 'assets/modelo3d/habSalinero.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 250000,
     desc: 'La experiencia más exclusiva del hotel.'
   },
   11: {
     nombre: 'Loft Moderno',
     img: 'assets/modelo3d/habPuerta.glb',
+    onirix: 'https://player.onirix.com/exp/LzJqPn',
     precio: 190000,
     desc: 'Estilo moderno con cocina equipada.'
   }
@@ -265,7 +276,7 @@ habitacionesDestacadas: any = {
   }
 
   private async geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=TU_TOKEN_MAPBOX&limit=1`;
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=pk.eyJ1IjoieHRwaWQiLCJhIjoiY21pZmt4ejE0MDB4MDNmcGpnMGhoajNmaSJ9.-TO2oqVLiLpMG14ih_Ut6A&limit=1`;
 
     const response = await fetch(url);
     const data = await response.json();
